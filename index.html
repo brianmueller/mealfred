@@ -14,15 +14,19 @@
           var sheetUrl = 'https://spreadsheets.google.com/feeds/cells/1N8b0FL5uXfuHkYY-oJsjEBGEufzn8BGo_UAUPiXzRo4/2/public/full?alt=json';
 
           var sheetKey = '1N8b0FL5uXfuHkYY-oJsjEBGEufzn8BGo_UAUPiXzRo4'
-          // http://gsx2json.com/api?id=1N8b0FL5uXfuHkYY-oJsjEBGEufzn8BGo_UAUPiXzRo4
-          $.getJSON('https://gsx2json.com/api?id='+sheetKey,function(data){
-            console.log(data.rows)
-            data.rows.forEach(function(row){
-              // document.body.innerHTML += `<h2>${row.title}</h2>`;
-              // document.body.innerHTML += `<img src=${row.jpgsq}>`;
-              entries.innerHTML += `<div class="col-md-3"><h3>${row.title}</h3><img class="img-responsive" src=${row.jpgsq}></div>`;
-            });
-          });
+          
+         $.ajax({
+           type: 'GET',
+           url: 'http://gsx2json.com/api?id='+sheetKey,
+           dataType: 'json',
+           success: function (data) {
+               data.rows.forEach(function(row){
+                 // document.body.innerHTML += `<h2>${row.title}</h2>`;
+                 // document.body.innerHTML += `<img src=${row.jpgsq}>`;
+                 entries.innerHTML += `<div class="col-md-3"><h3>${row.title}</h3><img class="img-responsive" src=${row.jpgsq}></div>`;
+               });
+           }
+         });
          
          });
       </script>
