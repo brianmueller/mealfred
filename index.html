@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>MEalfred</title>
     <link rel="apple-touch-icon" href="apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
@@ -14,6 +14,7 @@
     <link href="https://fonts.googleapis.com/css?family=Oswald&display=swap" rel="stylesheet">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/textfit/2.3.1/textFit.min.js"></script>
     <script>
         $(function() {
             var all = document.querySelector('#all');
@@ -47,7 +48,7 @@
                 }, {}));
                 // console.log(recipes);
 
-                recipes.forEach(function(recipe) {
+                recipes.forEach(function(recipe, index) {
                     // all.innerHTML += `<div class="col-6 col-sm-3"><h3>${recipe.Title}</h3><img class="img-responsive" src=${recipe.Jpgsq}></div>`;
                     var toAdd = ""
                     toAdd += `
@@ -56,7 +57,7 @@
                             <div class="card-body">
                                 <h6 class="card-title">${recipe.Title}
                     `
-                    if(recipe.Link != "") {
+                    if (recipe.Link != "") {
                         toAdd += `
                             <a href=${recipe.Link}><img src="link-icon.png" class="link-icon"></a>
                         `
@@ -64,14 +65,39 @@
                     toAdd += `
                                 </h6>
                             </div>
-                            <img src=${recipe.Jpgsq} class="card-img-top">
+                            <img src=${recipe.Jpgsq} class="card-img-top recipeImg" id="recipe${index}">
                         </div>
                       </div>`
+                    toAdd += `
+                        <div id="recipe${index}notes" class="overlay">
+                            <div class="overlayText">
+                                <h1>${recipe.Title}</h1>
+                                <p>${recipe.Notes}</p>
+                            </div>
+                        </div>
+                    `
                     all.innerHTML += toAdd;
+                    $(`#recipe${index}notes .overlayText`).css('font-size', index * 5 + 10)
                 });
+
+                // show note
+                $('.recipeImg').click(function() {
+                    var newId = "#" + $(this).attr('id') + "notes";
+                    $(newId).css('display', 'block');
+                });
+
+                // hide note
+                $('.overlay').click(function() {
+                    $(this).css('display', 'none');
+                });
+
+                textFit(document.getElementsByClassName('overlayText'), { multiLine: true })
+                $('.overlay').css('display', 'none')
 
 
             });
+
+
 
 
         });
@@ -90,7 +116,7 @@
             font-weight: 700;
             font-size: 60px;
         }
-
+        
         .card-title {
             margin-bottom: 0;
         }
@@ -119,9 +145,44 @@
             display: flex;
             flex-direction: column;
         }
-        
+
         .link-icon {
             height: 1.5em;
+        }
+
+        .overlay {
+            position: fixed;
+            /*display: none; // causes problem with fittext */
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.8);
+            z-index: 2;
+            cursor: pointer;
+        }
+
+        .overlayText {
+            width: 100%;
+            height: 100%;
+            color: white;
+            /*position: absolute;*/
+            /*top: 50%;*/
+            /*left: 50%;*/
+            /*font-size: 50px;*/
+            /*transform: translate(-50%, -50%);*/
+            /*-ms-transform: translate(-50%, -50%);*/
+        }
+        
+        .overlayText h1 {
+            text-align: center;
+            font-size: 30px;
+        }
+        
+        p {
+            
         }
     </style>
 </head>
@@ -145,15 +206,12 @@
             <!--    </div>-->
             <!--</div>-->
 
-
-
-
-
             <div class="row" id="all">
             </div>
 
         </div>
     </div>
+
 
 </body>
 
