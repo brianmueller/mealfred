@@ -94,13 +94,20 @@
                 textFit(document.getElementsByClassName('overlayText'), { multiLine: true })
                 $('.overlay').css('display', 'none')
 
+                $('#shuffle').click(function() {
+                    var all = document.querySelector('#all');
+                    for (var i = all.children.length; i >= 0; i--) {
+                        all.appendChild(all.children[Math.random() * i | 0]);
+                    }
+                });
 
-            });
+
+            }); //getJSON
 
 
 
 
-        });
+        }); //ready
     </script>
 
     <style>
@@ -111,33 +118,40 @@
         /*}*/
 
         h1 {
-            margin: 10px 0 25px;
+            margin: 10px 0;
             font-family: 'Oswald', sans-serif;
             font-weight: 700;
             font-size: 60px;
         }
-        
+
         .card-title {
             margin-bottom: 0;
         }
-        
+
         .card-body {
             padding: 10px;
             background-color: whitesmoke;
         }
-        
+
         .card-img-top {
-            border-top-left-radius: 0px; 
+            border-top-left-radius: 0px;
             border-top-right-radius: 0px;
             border-bottom-left-radius: calc(.25rem - 1px);
             border-bottom-right-radius: calc(.25rem - 1px);
         }
 
-        .icon {
+        h1 .icon {
             height: 1em;
             position: relative;
             top: -5px;
             margin: 0 5px;
+        }
+        
+        #shuffle .icon {
+            height: 1em;
+            position: relative;
+            top: -2px;
+            width: 20px;
         }
 
         .col-6 {
@@ -173,38 +187,44 @@
             /*transform: translate(-50%, -50%);*/
             /*-ms-transform: translate(-50%, -50%);*/
         }
-        
+
         .overlayText h1 {
             text-align: center;
             font-size: 30px;
         }
         
+        #shuffle{
+            margin-bottom: 15px;
+        }
     </style>
 </head>
 
 <body>
 
     <h1 class="text-center"><img src="mealfred-logo-white-sm.png" class="icon">MEalfred</h1>
+
+    <!--<span class="text-center" id="shuffle">Shuffle</span>-->
+    <div class="text-center"><button class="btn btn-primary text-center" id="shuffle"><img src="shuffle-white.png" class="icon"></button></div>
     
-    <div class="text-center"></div>
+
 
     <div class="container">
 
         <!--<div class="row display-flex">-->
 
-            <!--<div class="col-6 col-md-3">-->
-            <!--    <div class="card">-->
-            <!--        <div class="card-body">-->
-            <!--            <h5 class="card-title">Recipe Name</h5>-->
-            <!--            <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>-->
-            <!--            <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>-->
-            <!--        </div>-->
-            <!--        <img src="https://lh3.googleusercontent.com/CVADx4ooZwn5vId4lUbYFXWVgW0psw0M_eM6m3spPdyjw8Usofm40w7Hjg3mfrgOkJvrZ71MxoBbIO_GicBpKGFpRXTjRwIf1uatpHIzoz5SIdtTJy6u7NPaHGO1vd9xGnP318A8K1Q=h400-w400-c" class="card-img-top">-->
-            <!--    </div>-->
-            <!--</div>-->
+        <!--<div class="col-6 col-md-3">-->
+        <!--    <div class="card">-->
+        <!--        <div class="card-body">-->
+        <!--            <h5 class="card-title">Recipe Name</h5>-->
+        <!--            <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>-->
+        <!--            <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>-->
+        <!--        </div>-->
+        <!--        <img src="https://lh3.googleusercontent.com/CVADx4ooZwn5vId4lUbYFXWVgW0psw0M_eM6m3spPdyjw8Usofm40w7Hjg3mfrgOkJvrZ71MxoBbIO_GicBpKGFpRXTjRwIf1uatpHIzoz5SIdtTJy6u7NPaHGO1vd9xGnP318A8K1Q=h400-w400-c" class="card-img-top">-->
+        <!--    </div>-->
+        <!--</div>-->
 
-            <div class="row" id="all">
-            </div>
+        <div class="row" id="all">
+        </div>
 
         <!--</div>-->
     </div>
