@@ -6,6 +6,9 @@
     <meta name="viewport" content="width=device-width">
     <title>Meal Catalog</title>
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
@@ -25,13 +28,14 @@
                 for (var i = 0; i < data.feed.gs$rowCount.$t; i++) {
                     var row = [];
                     for (var j = 0; j < data.feed.gs$colCount.$t; j++) {
-                        if(entries[num].gs$cell.col == j+1){ //lined up
+                        if (entries[num].gs$cell.col == j + 1) { //lined up
                             row.push(entries[num].gs$cell.$t);
                             num++;
-                        } else { //cell was empty and didn't show up in json
+                        }
+                        else { //cell was empty and didn't show up in json
                             row.push("");
                         }
-                        
+
                     }
                     values.push(row)
                 }
@@ -40,14 +44,14 @@
                     return acc;
                 }, {}));
                 // console.log(recipes);
-                
-                recipes.forEach(function(recipe){
+
+                recipes.forEach(function(recipe) {
                     all.innerHTML += `<div class="col-sm-3 col-xs-6"><h3>${recipe.Title}</h3><img class="img-responsive" src=${recipe.Jpgsq}></div>`;
                 })
-                
+
             });
 
-            
+
         });
     </script>
 </head>
