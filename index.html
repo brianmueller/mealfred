@@ -9,7 +9,9 @@
     <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
 
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">-->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css?family=Oswald&display=swap" rel="stylesheet">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
     <script>
@@ -46,19 +48,110 @@
                 // console.log(recipes);
 
                 recipes.forEach(function(recipe) {
-                    all.innerHTML += `<div class="col-sm-3 col-xs-6"><h3>${recipe.Title}</h3><img class="img-responsive" src=${recipe.Jpgsq}></div>`;
-                })
+                    // all.innerHTML += `<div class="col-6 col-sm-3"><h3>${recipe.Title}</h3><img class="img-responsive" src=${recipe.Jpgsq}></div>`;
+                    var toAdd = ""
+                    toAdd += `
+                    <div class="col-6 col-md-3">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">${recipe.Title}
+                    `
+                    if(recipe.Link != "") {
+                        toAdd += `
+                            <a href=${recipe.Link}><img src="link-icon.png" class="link-icon"></a>
+                        `
+                    }
+                    toAdd += `
+                                </h5>
+                            </div>
+                            <img src=${recipe.Jpgsq} class="card-img-top">
+                        </div>
+                      </div>`
+                    all.innerHTML += toAdd;
+                });
+
 
             });
 
 
         });
     </script>
+
+    <style>
+        /*body > div > div > div.col-sm-3 > div > div {*/
+
+        /*    padding: 10px;*/
+
+        /*}*/
+
+        h1 {
+            margin: 10px 0 25px;
+            font-family: 'Oswald', sans-serif;
+            font-weight: 700;
+            font-size: 60px;
+        }
+
+        .card-title {
+            margin-bottom: 0;
+        }
+
+        .icon {
+            height: 1em;
+            position: relative;
+            top: -5px;
+            margin: 0 5px;
+        }
+
+        .col-6 {
+            padding: 0 15px 10px;
+        }
+
+        body {
+            padding: 15px;
+        }
+
+        .row.display-flex {
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .row.display-flex>[class*='col-'] {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .link-icon {
+            height: 1.5em;
+        }
+    </style>
 </head>
 
 <body>
+
+    <h1 class="text-center"><img src="mealfred-logo-white-sm.png" class="icon">MEalfred</h1>
+
     <div class="container">
-        <div class="row" id="all">
+
+        <div class="row display-flex">
+
+            <!--<div class="col-6 col-md-3">-->
+            <!--    <div class="card">-->
+            <!--        <div class="card-body">-->
+            <!--            <h5 class="card-title">Recipe Name</h5>-->
+            <!--            <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>-->
+            <!--            <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>-->
+            <!--        </div>-->
+            <!--        <img src="https://lh3.googleusercontent.com/CVADx4ooZwn5vId4lUbYFXWVgW0psw0M_eM6m3spPdyjw8Usofm40w7Hjg3mfrgOkJvrZ71MxoBbIO_GicBpKGFpRXTjRwIf1uatpHIzoz5SIdtTJy6u7NPaHGO1vd9xGnP318A8K1Q=h400-w400-c" class="card-img-top">-->
+            <!--    </div>-->
+            <!--</div>-->
+
+
+
+
+
+            <div class="row" id="all">
+            </div>
+
         </div>
     </div>
 
