@@ -55,7 +55,7 @@
                     <div class="col-6 col-md-3">
                         <div class="card">
                             <div class="card-body">
-                                <h6 class="card-title">${recipe.Title}
+                                <p class="card-title">${recipe.Title}
                     `
                     if (recipe.Link != "") {
                         toAdd += `
@@ -63,7 +63,7 @@
                         `
                     }
                     toAdd += `
-                                </h6>
+                                </p>
                             </div>
                             <img src=${recipe.Jpgsq} class="card-img-top recipeImg" id="recipe${index}">
                         </div>
@@ -126,6 +126,11 @@
 
         .card-title {
             margin-bottom: 0;
+        }
+        
+        p.card-title {
+            font-size: 12px;
+            font-weight: 700;
         }
 
         .card-body {
