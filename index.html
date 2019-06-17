@@ -105,7 +105,15 @@
             }); //getJSON
 
 
-
+            // prevent double-tap zoom
+            var lastTouchEnd = 0;
+            document.addEventListener('touchend', function(event) {
+                var now = (new Date()).getTime();
+                if (now - lastTouchEnd <= 400) {
+                    event.preventDefault();
+                }
+                lastTouchEnd = now;
+            }, false);
 
         }); //ready
     </script>
@@ -127,7 +135,7 @@
         .card-title {
             margin-bottom: 0;
         }
-        
+
         p.card-title {
             font-size: 12px;
             font-weight: 700;
@@ -151,7 +159,7 @@
             top: -5px;
             margin: 0 5px;
         }
-        
+
         #shuffle .icon {
             height: 1em;
             position: relative;
@@ -197,8 +205,8 @@
             text-align: center;
             font-size: 30px;
         }
-        
-        #shuffle{
+
+        #shuffle {
             margin-bottom: 15px;
         }
     </style>
@@ -210,7 +218,7 @@
 
     <!--<span class="text-center" id="shuffle">Shuffle</span>-->
     <div class="text-center"><button class="btn btn-primary text-center" id="shuffle"><img src="shuffle-white.png" class="icon"></button></div>
-    
+
 
 
     <div class="container">
