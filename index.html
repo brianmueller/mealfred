@@ -17,6 +17,150 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/textfit/2.3.1/textFit.min.js"></script>
     <script>
         $(function() {
+
+            var queueArr = [];
+
+            async function showQueue() {
+                const jsonStore = await fetch('https://www.jsonstore.io/ab67964eeddb50e47e8c976258f550919003dcfdd59b7e2fac840d3bcd31f39e/queue')
+                    .then(function(response) {
+                        return response.json();
+                });
+                
+                // console.log(jsonStore.result);
+
+                // jsonStore.result.forEach(function(meal){
+                //     console.log(meal);
+                // });
+                if(jsonStore.result != null){
+                    queueArr = jsonStore.result;
+                    let queueUl = document.querySelector('#queue ul');
+                    jsonStore.result.forEach(function(meal){
+                        // let li = document.createElement("li");
+                        // li.appendChild(document.createTextNode(meal));
+                        // queueUl.appendChild(li);
+                        queueUl.innerHTML += "<li><span>"+meal+"</span> <img src='trash-icon.png' class='deleteQueueItem'></li>";
+                    });
+                }
+
+                queuesListenForDelete();
+            }
+            showQueue();
+
+
+            // add to queue
+
+            document.querySelector("#plusQueue").addEventListener("click",function(){
+                let queueToAdd = document.querySelector("#queueToAdd").value;
+                // console.log(queueToAdd);
+
+                // front end
+                let queueUl = document.querySelector('#queue ul');
+                // let li = document.createElement("li");
+                // li.appendChild(document.createTextNode(queueToAdd));
+                // queueUl.appendChild(li);
+                queueUl.innerHTML += "<li>"+queueToAdd+" <img src='trash-icon.png' class='deleteQueueItem'></li>";
+                queuesListenForDelete();
+
+                // back end
+                addToQueue(queueToAdd);
+
+                document.querySelector("#queueToAdd").value = "";
+            });
+
+            async function addToQueue(meal) {
+                const jsonStore = await fetch('https://www.jsonstore.io/ab67964eeddb50e47e8c976258f550919003dcfdd59b7e2fac840d3bcd31f39e/queue')
+                    .then(function(response) {
+                        return response.json();
+                });
+                
+                // console.log(jsonStore.result.queue);
+
+                // jsonStore.result.queue.forEach(function(meal){
+                //     console.log(meal);
+                // });
+
+                queueArr = jsonStore.result;
+                if(jsonStore.result == null){
+                    queueArr = [meal]
+                } else {
+                    queueArr.push(meal);
+                }
+                // console.log(queueArr);
+                fetch('https://www.jsonstore.io/ab67964eeddb50e47e8c976258f550919003dcfdd59b7e2fac840d3bcd31f39e/queue', {
+                  headers: {
+                    'Content-type': 'application/json'
+                  },
+                  method: 'PUT',
+                  body: JSON.stringify(queueArr),
+                });
+            }
+
+
+            // clear queue
+
+            document.querySelector("#clearQueue").addEventListener("click",function(){
+                // front end
+                document.querySelector("#queue ul").innerHTML = "";
+
+                // back end
+                clearQueue();
+            });
+
+            async function clearQueue() {
+                fetch('https://www.jsonstore.io/ab67964eeddb50e47e8c976258f550919003dcfdd59b7e2fac840d3bcd31f39e/queue', {
+                  headers: {
+                    'Content-type': 'application/json'
+                  },
+                  method: 'PUT',
+                  body: JSON.stringify([]),
+                });
+            }
+
+
+
+            // delete item from queue
+            function queuesListenForDelete(){
+                let queues = document.getElementsByClassName("deleteQueueItem");
+                // console.log(queues);
+
+                Array.from(queues).forEach(function(element) {
+                    element.addEventListener('click', function(){
+                        // front end
+                        this.parentElement.remove();
+
+                        // back end
+                        let mealText = this.parentElement.firstChild.innerHTML;
+                        mealIndex = queueArr.indexOf(mealText);
+                        queueArr.splice(mealIndex,1);
+                        fetch('https://www.jsonstore.io/ab67964eeddb50e47e8c976258f550919003dcfdd59b7e2fac840d3bcd31f39e/queue', {
+                            headers: {
+                                'Content-type': 'application/json'
+                            },
+                            method: 'PUT',
+                            body: JSON.stringify(queueArr),
+                        });
+                    });
+                });
+                // queues.forEach(function(element) {
+                //   element.addEventListener('click', myFunction);
+                // });
+                // document.querySelectorAll(".deleteQueueItem").addEventListener("click",function(){
+                //     // front end
+                //     console.log(this);
+
+                //     // back end
+                //     // beasts.indexOf('bison')
+                // });
+            }
+
+
+
+
+
+
+
+
+
             var all = document.querySelector('#all');
 
             var sheetUrl = 'https://spreadsheets.google.com/feeds/cells/1N8b0FL5uXfuHkYY-oJsjEBGEufzn8BGo_UAUPiXzRo4/1/public/full?alt=json';
@@ -132,6 +276,32 @@
             font-size: 60px;
         }
 
+        #clearQueue {
+            /*font-size: 20px;*/
+        }
+
+        .box {
+            border: 2px solid black;
+            margin-bottom: 10px;
+            padding: 10px;
+        }
+
+        .box li {
+            border: 1px dashed black;
+            list-style: none;
+            padding: 5px;
+        }
+
+        .deleteQueueItem {
+            height: 20px;
+            position: relative;
+            top: -3px;
+        }
+
+        .plus-icon {
+            height: 20px;
+        }
+
         .card-title {
             margin-bottom: 0;
         }
@@ -229,6 +399,17 @@
 
 
     <div class="container">
+        <div class="box">
+            <h2 class="text-center">Queue</h2>
+            <h5 id="clearQueue" class="text-muted text-center">[clear]</h5>
+            <div id="queue">
+                <ul></ul>
+                <ul>
+                    <li><input id="queueToAdd"><img src="plus-icon.png" class="plus-icon" id="plusQueue"></li>
+                </ul>
+            </div>
+            
+        </div>
 
         <!--<div class="row display-flex">-->
 
