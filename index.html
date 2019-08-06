@@ -116,11 +116,14 @@
             // clear queue
 
             document.querySelector("#clearQueue").addEventListener("click",function(){
-                // front end
-                document.querySelector("#queue ul").innerHTML = "";
+                let clearQueueConfirm = confirm("Are you sure you want to clear the queue?");
+                if(clearQueueConfirm){
+                    // front end
+                    document.querySelector("#queue ul").innerHTML = "";
 
-                // back end
-                clearQueue();
+                    // back end
+                    clearQueue();
+                }
             });
 
             async function clearQueue() {
@@ -190,44 +193,7 @@
                 if(jsonStore.result != null){
                     calendarHash = jsonStore.result;
                     let calendarBody = document.querySelector('#calendar tbody');
-                    // jsonStore.result.forEach(function(day){
-                        // let li = document.createElement("li");
-                        // li.appendChild(document.createTextNode(meal));
-                        // queueUl.appendChild(li);
-                        // queueUl.innerHTML += "<li><span>"+meal+"</span> <img src='trash-icon.png' class='deleteQueueItem'></li>";
                     
-                    // console.log(calendarHash);
-                    // const calEntries = Object.entries(calendarHash);
-                    // for(const [day, me] of calEntries){
-                    //     console.log(day);
-                    //     const me_entries = Object.entries(me);
-                    //     for(const [column,content] of me_entries){
-                    //         if(column == "meals"){
-                    //             if(content != ""){
-                    //                 console.log("meals:");
-                    //                 content.forEach(function(elem){
-                    //                     console.log(elem);
-                    //                 });
-                    //             }
-                    //         } else {
-                    //             if(content != ""){
-                    //                 console.log("events:");
-                    //                 content.forEach(function(elem){
-                    //                     console.log(elem);
-                    //                 });
-                    //             }
-                    //         }
-                    //     }
-                    // }
-
-                    // let wed = document.querySelector('#wednesday');
-                    // calendarHash["Wednesday"]["meals"].forEach(function(meal){
-                    //     wed.childNodes[3].innerHTML += `<li>${meal}</li>`;
-                    // });
-                    // calendarHash["Wednesday"]["events"].forEach(function(event){
-                    //     wed.childNodes[5].innerHTML += `<li>${event}</li>`;
-                    // });
-
                     calendarBody.childNodes.forEach(function(trDay){
                         if(trDay.nodeName == "TR"){
                             let day = trDay.children[0].innerText;
@@ -246,6 +212,69 @@
                 // queuesListenForDelete();
             }
             showCalendar();
+
+
+            // clear calendar
+
+            document.querySelector("#clearCalendar").addEventListener("click",function(){
+                let clearCalendarConfirm = confirm("Are you sure you want to clear the calendar?");
+                if(clearCalendarConfirm) clearCalendar();
+            });
+
+            function clearCalendar(){
+                // front end
+                let calendarBody = document.querySelector('#calendar tbody');
+                let days = ["Saturday","Sunday","Monday","Tuesday","Wednesday","Thursday","Friday"];
+                calendarBody.childNodes.forEach(function(trDay){
+                    if(trDay.nodeName == "TR"){
+                        trDay.childNodes[3].innerHTML = "";
+                        trDay.childNodes[5].innerHTML = "";
+                    }
+                });
+                
+                    // back end
+                    clearCalendarJSON();
+            }
+
+            async function clearCalendarJSON() {
+                let emptyCal = {
+                    "Saturday":{
+                        "meals":[""],
+                        "events":[""]
+                    },
+                    "Sunday":{
+                        "meals":[""],
+                        "events":[""]
+                    },
+                    "Monday":{
+                        "meals":[""],
+                        "events":[""]
+                    },
+                    "Tuesday":{
+                        "meals":[""],
+                        "events":[""]
+                    },
+                    "Wednesday":{
+                        "meals":[""],
+                        "events":[""]
+                    },
+                    "Thursday":{
+                        "meals":[""],
+                        "events":[""]
+                    },
+                    "Friday":{
+                        "meals":[""],
+                        "events":[""]
+                    }
+                }
+                fetch('https://www.jsonstore.io/ab67964eeddb50e47e8c976258f550919003dcfdd59b7e2fac840d3bcd31f39e/calendar', {
+                  headers: {
+                    'Content-type': 'application/json'
+                  },
+                  method: 'PUT',
+                  body: JSON.stringify(emptyCal),
+                });
+            }
 
             /******************* END CALENDAR *******************/
 
@@ -367,10 +396,6 @@
             font-family: 'Oswald', sans-serif;
             font-weight: 700;
             font-size: 60px;
-        }
-
-        #clearQueue {
-            /*font-size: 20px;*/
         }
 
         .box {
@@ -517,6 +542,7 @@
         <div class="box">
             <h2 class="text-center">Calendar</h2>
             <div id="calendar">
+            <h5 id="clearCalendar" class="text-muted text-center">[clear]</h5>
                 <table class="table table-striped">
                     <thead class="thead-dark">
                         <tr>
