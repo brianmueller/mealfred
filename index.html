@@ -18,6 +18,8 @@
     <script>
         $(function() {
 
+            /******************* QUEUE *******************/
+
             var queueArr = [];
 
             async function showQueue() {
@@ -168,10 +170,84 @@
                 // });
             }
 
+            /******************* END QUEUE *******************/
 
+            /******************* CALENDAR *******************/
 
+            var calendarHash = {};
 
+            async function showCalendar() {
+                const jsonStore = await fetch('https://www.jsonstore.io/ab67964eeddb50e47e8c976258f550919003dcfdd59b7e2fac840d3bcd31f39e/calendar')
+                    .then(function(response) {
+                        return response.json();
+                });
+                
+                // console.log(jsonStore.result);
 
+                // jsonStore.result.forEach(function(meal){
+                //     console.log(meal);
+                // });
+                if(jsonStore.result != null){
+                    calendarHash = jsonStore.result;
+                    let calendarBody = document.querySelector('#calendar tbody');
+                    // jsonStore.result.forEach(function(day){
+                        // let li = document.createElement("li");
+                        // li.appendChild(document.createTextNode(meal));
+                        // queueUl.appendChild(li);
+                        // queueUl.innerHTML += "<li><span>"+meal+"</span> <img src='trash-icon.png' class='deleteQueueItem'></li>";
+                    
+                    // console.log(calendarHash);
+                    // const calEntries = Object.entries(calendarHash);
+                    // for(const [day, me] of calEntries){
+                    //     console.log(day);
+                    //     const me_entries = Object.entries(me);
+                    //     for(const [column,content] of me_entries){
+                    //         if(column == "meals"){
+                    //             if(content != ""){
+                    //                 console.log("meals:");
+                    //                 content.forEach(function(elem){
+                    //                     console.log(elem);
+                    //                 });
+                    //             }
+                    //         } else {
+                    //             if(content != ""){
+                    //                 console.log("events:");
+                    //                 content.forEach(function(elem){
+                    //                     console.log(elem);
+                    //                 });
+                    //             }
+                    //         }
+                    //     }
+                    // }
+
+                    // let wed = document.querySelector('#wednesday');
+                    // calendarHash["Wednesday"]["meals"].forEach(function(meal){
+                    //     wed.childNodes[3].innerHTML += `<li>${meal}</li>`;
+                    // });
+                    // calendarHash["Wednesday"]["events"].forEach(function(event){
+                    //     wed.childNodes[5].innerHTML += `<li>${event}</li>`;
+                    // });
+
+                    calendarBody.childNodes.forEach(function(trDay){
+                        if(trDay.nodeName == "TR"){
+                            let day = trDay.children[0].innerText;
+                            let meals = calendarHash[day]["meals"];
+                            for(let i = 1; i < meals.length; i++){
+                                trDay.childNodes[3].innerHTML += `<li>${meals[i]}</li>`;
+                            }
+                            let events = calendarHash[day]["events"];
+                            for(let i = 1; i < events.length; i++){
+                                trDay.childNodes[5].innerHTML += `<li>${events[i]}</li>`;
+                            }
+                        }
+                    });
+                }
+
+                // queuesListenForDelete();
+            }
+            showCalendar();
+
+            /******************* END CALENDAR *******************/
 
 
 
@@ -489,12 +565,12 @@
                         <tr id="wednesday">
                             <th scope="row">Wednesday</th>
                             <td class="meals">
-                                <li>Rice and beans with chicken</li>
-                                <li>Roasted Broccoli</li>
+                                <!-- <li>Rice and beans with chicken</li> -->
+                                <!-- <li>Roasted Broccoli</li> -->
                             </td>
                             <td class="events">
-                                <li>Brian MfA</li>
-                                <li>GG</li>
+                                <!-- <li>Brian MfA</li> -->
+                                <!-- <li>GG</li> -->
                             </td>
                         </tr>
                         <tr id="thursday">
