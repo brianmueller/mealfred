@@ -20,7 +20,9 @@
 
             /******************* QUEUE *******************/
 
-            var queueArr = [];
+            let queueArr = [];
+            let mealIndex = 0;
+            let mealText = "";
 
             async function showQueue() {
                 const jsonStore = await fetch('https://www.jsonstore.io/ab67964eeddb50e47e8c976258f550919003dcfdd59b7e2fac840d3bcd31f39e/queue')
@@ -40,10 +42,11 @@
                         // let li = document.createElement("li");
                         // li.appendChild(document.createTextNode(meal));
                         // queueUl.appendChild(li);
-                        queueUl.innerHTML += "<li><span>"+meal+"</span> <img src='trash-icon.png' class='deleteQueueItem'></li>";
+                        queueUl.innerHTML += "<li><span>"+meal+"</span> <img src='calendar-icon.png' class='schedule'><img src='trash-icon.png' class='deleteQueueItem'></li>";
                     });
                 }
-
+                
+                queuesListenForSchedule();
                 queuesListenForDelete();
             }
             showQueue();
@@ -54,7 +57,9 @@
             function addToQueue(meal){
                 // front end
                 let queueUl = document.querySelector('#queue ul');
-                queueUl.innerHTML += "<li>"+meal+" <img src='trash-icon.png' class='deleteQueueItem'></li>";
+                queueUl.innerHTML += "<li><span>"+meal+"</span> <img src='calendar-icon.png' class='schedule'><img src='trash-icon.png' class='deleteQueueItem'></li>";
+                
+                queuesListenForSchedule();
                 queuesListenForDelete();
 
                 // back end
@@ -139,6 +144,19 @@
 
 
             // delete item from queue
+
+            function deletefromQueue(mealT){
+                mealI = queueArr.indexOf(mealT);
+                queueArr.splice(mealI,1);
+                fetch('https://www.jsonstore.io/ab67964eeddb50e47e8c976258f550919003dcfdd59b7e2fac840d3bcd31f39e/queue', {
+                    headers: {
+                        'Content-type': 'application/json'
+                    },
+                    method: 'PUT',
+                    body: JSON.stringify(queueArr),
+                });
+            }
+
             function queuesListenForDelete(){
                 let queues = document.getElementsByClassName("deleteQueueItem");
                 // console.log(queues);
@@ -150,28 +168,92 @@
 
                         // back end
                         let mealText = this.parentElement.firstChild.innerHTML;
-                        mealIndex = queueArr.indexOf(mealText);
-                        queueArr.splice(mealIndex,1);
-                        fetch('https://www.jsonstore.io/ab67964eeddb50e47e8c976258f550919003dcfdd59b7e2fac840d3bcd31f39e/queue', {
-                            headers: {
-                                'Content-type': 'application/json'
-                            },
-                            method: 'PUT',
-                            body: JSON.stringify(queueArr),
-                        });
+                        deletefromQueue(mealText);
                     });
                 });
-                // queues.forEach(function(element) {
-                //   element.addEventListener('click', myFunction);
-                // });
-                // document.querySelectorAll(".deleteQueueItem").addEventListener("click",function(){
-                //     // front end
-                //     console.log(this);
-
-                //     // back end
-                //     // beasts.indexOf('bison')
-                // });
             }
+
+            // schedule
+
+            function queuesListenForSchedule(){
+                let queues = document.getElementsByClassName("schedule");
+                // console.log(queues);
+
+                Array.from(queues).forEach(function(element) {
+                    element.addEventListener('click', function(){
+                        // front end
+                        mealText = this.parentElement.childNodes[0].innerHTML;
+                        $('#scheduler').css('display','block');
+                        this.parentElement.remove();
+
+
+
+
+                        // back end
+                        // let mealText = this.parentElement.firstChild.innerHTML;
+                        // mealIndex = queueArr.indexOf(mealText);
+                        // queueArr.splice(mealIndex,1);
+                        // fetch('https://www.jsonstore.io/ab67964eeddb50e47e8c976258f550919003dcfdd59b7e2fac840d3bcd31f39e/queue', {
+                        //     headers: {
+                        //         'Content-type': 'application/json'
+                        //     },
+                        //     method: 'PUT',
+                        //     body: JSON.stringify(queueArr),
+                        // });
+                    });
+                });
+            }
+
+            function scheduler(){
+                let schedulerDays = document.getElementsByClassName("schedulerDay");
+                Array.from(schedulerDays).forEach(function(day) {
+                    day.addEventListener('click', function(){
+                        let dayText = this.innerText;
+                        scheduleMealFront(dayText,mealText);
+                        scheduleMealBack(dayText,mealText,false);
+                        $('#scheduler').css('display','none');
+                    });
+                })
+            }
+            scheduler();
+
+            function scheduleMealFront(day,meal){
+                let targetDay = document.querySelector('#'+day.toLowerCase());
+                targetDay.childNodes[3].innerHTML += `<li>${meal}</li>`;
+            }
+
+            //todo
+            async function scheduleMealBack(day,meal,reschedule) {
+                const jsonStore = await fetch('https://www.jsonstore.io/ab67964eeddb50e47e8c976258f550919003dcfdd59b7e2fac840d3bcd31f39e/calendar/'+day+'/meals')
+                    .then(function(response) {
+                        return response.json();
+                });
+                
+                console.log(jsonStore.result);
+
+                // jsonStore.result.queue.forEach(function(meal){
+                //     console.log(meal);
+                // });
+
+                mealArr = jsonStore.result;
+                mealArr.push(meal);
+
+                // console.log(queueArr);
+                fetch('https://www.jsonstore.io/ab67964eeddb50e47e8c976258f550919003dcfdd59b7e2fac840d3bcd31f39e/calendar/'+day+'/meals', {
+                  headers: {
+                    'Content-type': 'application/json'
+                  },
+                  method: 'PUT',
+                  body: JSON.stringify(mealArr),
+                });
+
+                if(reschedule){
+
+                } else {
+                    deletefromQueue(meal)
+                }
+            }
+
 
             /******************* END QUEUE *******************/
 
@@ -279,7 +361,7 @@
             /******************* END CALENDAR *******************/
 
 
-
+            /******************* CATALOG *******************/
 
             var all = document.querySelector('#all');
 
@@ -370,6 +452,8 @@
 
             }); //getJSON
 
+            /******************* END CATALOG *******************/
+
 
             // prevent double-tap zoom
             var lastTouchEnd = 0;
@@ -412,6 +496,53 @@
             border: 1px dashed black;
             list-style: none;
             padding: 5px;
+        }
+
+        .schedule {
+            height: 20px;
+            position: relative;
+            top: -3px;
+        }
+
+        #scheduler {
+            position: fixed;
+            display: none;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.8);
+            z-index: 2;
+            cursor: pointer;
+        }
+
+        .schedulerText {
+            width: 100%;
+            height: 100%;
+            color: white;
+            /*position: absolute;*/
+            /*top: 50%;*/
+            /*left: 50%;*/
+            /*font-size: 50px;*/
+            /*transform: translate(-50%, -50%);*/
+            /*-ms-transform: translate(-50%, -50%);*/
+        }
+
+        .schedulerText h1 {
+            text-align: center;
+            font-size: 30px;
+        }
+
+        .schedulerDay {
+            width: 300px;
+            background-color: lightgray;
+            color: black;
+            margin: 10px auto;
+            padding: 15px;
+            font-size: 20px;
+            text-align: center;
         }
 
         .deleteQueueItem {
@@ -525,6 +656,18 @@
     <!--<span class="text-center" id="shuffle">Shuffle</span>-->
     <div id="shuffle" class="text-center"><button class="btn btn-primary text-center" id="shuffle-btn"><img src="shuffle-white.png" class="icon"></button></div>
 
+    <div id="scheduler">
+        <div class="schedulerText" class="container">
+            <h1>Scheduler</h1>
+            <div class="schedulerDay">Saturday</div>
+            <div class="schedulerDay">Sunday</div>
+            <div class="schedulerDay">Monday</div>
+            <div class="schedulerDay">Tuesday</div>
+            <div class="schedulerDay">Wednesday</div>
+            <div class="schedulerDay">Thursday</div>
+            <div class="schedulerDay">Friday</div>
+        </div>
+    </div>
 
 
     <div class="container">
