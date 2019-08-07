@@ -70,9 +70,12 @@
             document.querySelector("#plusQueue").addEventListener("click",function(){
                 let userToAdd = document.querySelector("#queueToAdd").value;
                 // console.log(userToAdd);
-
-                addToQueue(userToAdd);
-                document.querySelector("#queueToAdd").value = "";
+                if(userToAdd == ""){
+                    alert("Please enter a meal");
+                }else {
+                    addToQueue(userToAdd);
+                    document.querySelector("#queueToAdd").value = "";
+                }
             });
 
             // from catalog
@@ -131,7 +134,7 @@
                 }
             });
 
-            async function clearQueue() {
+            function clearQueue() {
                 fetch('https://www.jsonstore.io/ab67964eeddb50e47e8c976258f550919003dcfdd59b7e2fac840d3bcd31f39e/queue', {
                   headers: {
                     'Content-type': 'application/json'
@@ -173,6 +176,54 @@
                 });
             }
 
+            function calendarMealsListenForDelete(){
+                let calendarMeals = document.getElementsByClassName("deleteCalendarMeal");
+                Array.from(calendarMeals).forEach(function(element) {
+                    element.addEventListener('click',function(){
+                        // back end
+                        let mealDay = this.parentElement.parentElement.parentElement.parentElement.childNodes[1].innerText;
+                        let mealText = this.parentElement.childNodes[0].innerText;
+                        removeFromCalendar("meal",mealDay,mealText);
+
+                        // front end
+                        this.parentElement.remove();
+                    });
+                });
+            }
+
+            function calendarEventsListenForDelete(){
+                let calendarEvents = document.getElementsByClassName("deleteCalendarEvent");
+                Array.from(calendarEvents).forEach(function(element) {
+                    element.addEventListener('click',function(){
+                        // back end
+                        let eventDay = this.parentElement.parentElement.parentElement.parentElement.childNodes[1].innerText;
+                        let eventText = this.parentElement.childNodes[0].innerText;
+                        removeFromCalendar("event",eventDay,eventText);
+
+                        // front end
+                        this.parentElement.remove();
+                    });
+                });
+            }
+
+            async function removeFromCalendar(type,day,name){
+                // type = "meal" or "event"
+                const jsonStore = await fetch('https://www.jsonstore.io/ab67964eeddb50e47e8c976258f550919003dcfdd59b7e2fac840d3bcd31f39e/calendar/'+day+'/'+type+'s')
+                    .then(function(response) {
+                        return response.json();
+                });
+                mealsOrEventsArr = jsonStore.result;
+                itemIndex = mealsOrEventsArr.indexOf(name);
+                mealsOrEventsArr.splice(itemIndex,1);
+                fetch('https://www.jsonstore.io/ab67964eeddb50e47e8c976258f550919003dcfdd59b7e2fac840d3bcd31f39e/calendar/'+day+'/'+type+'s', {
+                  headers: {
+                    'Content-type': 'application/json'
+                  },
+                  method: 'PUT',
+                  body: JSON.stringify(mealsOrEventsArr),
+                });
+            }
+
             // schedule
 
             function queuesListenForSchedule(){
@@ -182,24 +233,9 @@
                 Array.from(queues).forEach(function(element) {
                     element.addEventListener('click', function(){
                         // front end
-                        mealText = this.parentElement.childNodes[0].innerHTML;
+                        mealText = this.parentElement.parentElement.childNodes[0].childNodes[0].innerHTML;
                         $('#scheduler').css('display','block');
                         this.parentElement.remove();
-
-
-
-
-                        // back end
-                        // let mealText = this.parentElement.firstChild.innerHTML;
-                        // mealIndex = queueArr.indexOf(mealText);
-                        // queueArr.splice(mealIndex,1);
-                        // fetch('https://www.jsonstore.io/ab67964eeddb50e47e8c976258f550919003dcfdd59b7e2fac840d3bcd31f39e/queue', {
-                        //     headers: {
-                        //         'Content-type': 'application/json'
-                        //     },
-                        //     method: 'PUT',
-                        //     body: JSON.stringify(queueArr),
-                        // });
                     });
                 });
             }
@@ -213,32 +249,27 @@
                         scheduleMealBack(dayText,mealText,false);
                         $('#scheduler').css('display','none');
                     });
-                })
+                });
             }
             scheduler();
 
             function scheduleMealFront(day,meal){
                 let targetDay = document.querySelector('#'+day.toLowerCase());
-                targetDay.childNodes[3].innerHTML += `<li>${meal}</li>`;
+                targetDay.childNodes[3].childNodes[1].innerHTML += `<li><span>${meal}</span> <img src='trash-icon.png' class='deleteCalendarMeal'></li>`;
+
+                calendarMealsListenForDelete();
             }
 
-            //todo
             async function scheduleMealBack(day,meal,reschedule) {
+                // reschedule is a boolean
                 const jsonStore = await fetch('https://www.jsonstore.io/ab67964eeddb50e47e8c976258f550919003dcfdd59b7e2fac840d3bcd31f39e/calendar/'+day+'/meals')
                     .then(function(response) {
                         return response.json();
                 });
                 
-                console.log(jsonStore.result);
-
-                // jsonStore.result.queue.forEach(function(meal){
-                //     console.log(meal);
-                // });
-
                 mealArr = jsonStore.result;
                 mealArr.push(meal);
 
-                // console.log(queueArr);
                 fetch('https://www.jsonstore.io/ab67964eeddb50e47e8c976258f550919003dcfdd59b7e2fac840d3bcd31f39e/calendar/'+day+'/meals', {
                   headers: {
                     'Content-type': 'application/json'
@@ -281,19 +312,77 @@
                             let day = trDay.children[0].innerText;
                             let meals = calendarHash[day]["meals"];
                             for(let i = 1; i < meals.length; i++){
-                                trDay.childNodes[3].innerHTML += `<li>${meals[i]}</li>`;
+                                trDay.childNodes[3].childNodes[1].innerHTML += `<li><span>${meals[i]}</span> <img src='trash-icon.png' class='deleteCalendarMeal'></li>`;
                             }
                             let events = calendarHash[day]["events"];
                             for(let i = 1; i < events.length; i++){
-                                trDay.childNodes[5].innerHTML += `<li>${events[i]}</li>`;
+                                trDay.childNodes[5].childNodes[1].innerHTML += `<li><span>${events[i]}</span> <img src='trash-icon.png' class='deleteCalendarEvent'></li>`;
                             }
                         }
                     });
                 }
-
-                // queuesListenForDelete();
+                calendarMealsListenForDelete();
+                calendarEventsListenForDelete();
             }
             showCalendar();
+
+            // user meals
+
+            function calendarListenForPlusMeals(){
+                let allMealsPlus = document.getElementsByClassName("plusMeal");
+
+                Array.from(allMealsPlus).forEach(function(element) {
+                    element.addEventListener('click', function(){
+                        let userDay = this.parentElement.parentElement.childNodes[1].innerText;
+                        let userMeal = prompt("Please enter the meal:")
+                        scheduleMealFront(userDay,userMeal);
+                        scheduleMealBack(userDay,userMeal);
+                    });
+                });
+            }
+            calendarListenForPlusMeals();
+
+
+            // user events
+
+            function calendarListenForPlusEvents(){
+                let allEventsPlus = document.getElementsByClassName("plusEvent");
+
+                Array.from(allEventsPlus).forEach(function(element) {
+                    element.addEventListener('click', function(){
+                        let userDay = this.parentElement.parentElement.childNodes[1].innerText;
+                        let userEvent = prompt("Please enter the event:")
+                        scheduleEventFront(userDay,userEvent);
+                        scheduleEventBack(userDay,userEvent);
+                    });
+                });
+            }
+            calendarListenForPlusEvents();
+
+            function scheduleEventFront(day,event){
+                let targetDay = document.querySelector('#'+day.toLowerCase());
+                targetDay.childNodes[5].childNodes[1].innerHTML += `<li><span>${event}</span> <img src='trash-icon.png' class='deleteCalendarEvent'></li>`;
+
+                calendarEventsListenForDelete();
+            }
+
+            async function scheduleEventBack(day,event) {
+                const jsonStore = await fetch('https://www.jsonstore.io/ab67964eeddb50e47e8c976258f550919003dcfdd59b7e2fac840d3bcd31f39e/calendar/'+day+'/events')
+                    .then(function(response) {
+                        return response.json();
+                });
+                
+                eventArr = jsonStore.result;
+                eventArr.push(event);
+
+                fetch('https://www.jsonstore.io/ab67964eeddb50e47e8c976258f550919003dcfdd59b7e2fac840d3bcd31f39e/calendar/'+day+'/events', {
+                  headers: {
+                    'Content-type': 'application/json'
+                  },
+                  method: 'PUT',
+                  body: JSON.stringify(eventArr),
+                });
+            }
 
 
             // clear calendar
@@ -309,8 +398,8 @@
                 let days = ["Saturday","Sunday","Monday","Tuesday","Wednesday","Thursday","Friday"];
                 calendarBody.childNodes.forEach(function(trDay){
                     if(trDay.nodeName == "TR"){
-                        trDay.childNodes[3].innerHTML = "";
-                        trDay.childNodes[5].innerHTML = "";
+                        trDay.childNodes[3].childNodes[1].innerHTML = "";
+                        trDay.childNodes[5].childNodes[1].innerHTML = "";
                     }
                 });
                 
@@ -318,7 +407,7 @@
                     clearCalendarJSON();
             }
 
-            async function clearCalendarJSON() {
+            function clearCalendarJSON() {
                 let emptyCal = {
                     "Saturday":{
                         "meals":[""],
@@ -545,7 +634,7 @@
             text-align: center;
         }
 
-        .deleteQueueItem {
+        .deleteQueueItem, .deleteCalendarMeal, .deleteCalendarEvent {
             height: 20px;
             position: relative;
             top: -3px;
@@ -698,66 +787,78 @@
                         <tr id="saturday">
                             <th scope="row">Saturday</th>
                             <td class="meals">
-                                
+                                <ul></ul>
+                                <img src="plus-icon.png" class="plus-icon plusMeal">
                             </td>
                             <td class="events">
-                                
+                                <ul></ul>
+                                <img src="plus-icon.png" class="plus-icon plusEvent">
                             </td>
                         </tr>
                         <tr id="sunday">
                             <th scope="row">Sunday</th>
                             <td class="meals">
-                                
+                                <ul></ul>
+                                <img src="plus-icon.png" class="plus-icon plusMeal">
                             </td>
                             <td class="events">
-                                
+                                <ul></ul>
+                                <img src="plus-icon.png" class="plus-icon plusEvent">
                             </td>
                         </tr>
                         <tr id="monday">
                             <th scope="row">Monday</th>
                             <td class="meals">
-                                
+                                <ul></ul>
+                                <img src="plus-icon.png" class="plus-icon plusMeal">
                             </td>
                             <td class="events">
-                                
+                                <ul></ul>
+                                <img src="plus-icon.png" class="plus-icon plusEvent">
                             </td>
                         </tr>
                         <tr id="tuesday">
                             <th scope="row">Tuesday</th>
                             <td class="meals">
-                                
+                                <ul></ul>
+                                <img src="plus-icon.png" class="plus-icon plusMeal">
                             </td>
                             <td class="events">
-                                
+                                <ul></ul>
+                                <img src="plus-icon.png" class="plus-icon plusEvent">
                             </td>
                         </tr>
                         <tr id="wednesday">
                             <th scope="row">Wednesday</th>
                             <td class="meals">
-                                <!-- <li>Rice and beans with chicken</li> -->
-                                <!-- <li>Roasted Broccoli</li> -->
+                                <ul></ul>
+                                <img src="plus-icon.png" class="plus-icon plusMeal">
                             </td>
                             <td class="events">
-                                <!-- <li>Brian MfA</li> -->
-                                <!-- <li>GG</li> -->
+                                <ul></ul>
+                                <img src="plus-icon.png" class="plus-icon plusEvent">
                             </td>
                         </tr>
                         <tr id="thursday">
                             <th scope="row">Thursday</th>
                             <td class="meals">
-                                
+                                <ul></ul>
+                                <img src="plus-icon.png" class="plus-icon plusMeal">
                             </td>
                             <td class="events">
-                                
+                                <ul></ul>
+                                <img src="plus-icon.png" class="plus-icon plusEvent">
                             </td>
                         </tr>
                         <tr id="friday">
                             <th scope="row">Friday</th>
                             <td class="meals">
-                                
+                                <ul></ul>
+                                <img src="plus-icon.png" class="plus-icon plusMeal">
                             </td>
                             <td class="events">
-                                
+                                <ul></ul>
+                                <img src="plus-icon.png" class="plus-icon plusEvent">
                             </td>
                         </tr>
                     </tbody>
