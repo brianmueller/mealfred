@@ -18,15 +18,27 @@
     <script>
         $(function() {
 
+            function loading(){
+                // document.querySelector('body').style.backgroundColor = 'pink';
+                document.querySelector('#loading').style.display = 'block';
+            }
+
+            function loaded(){
+                // document.querySelector('body').style.backgroundColor = 'white';
+                document.querySelector('#loading').style.display = 'none';
+            }
+
             /******************* QUEUE *******************/
 
-            let queueArr = [];
+            let queueArr = [""];
             let mealIndex = 0;
             let mealText = "";
 
             async function showQueue() {
+                loading();
                 const jsonStore = await fetch('https://www.jsonstore.io/ab67964eeddb50e47e8c976258f550919003dcfdd59b7e2fac840d3bcd31f39e/queue')
                     .then(function(response) {
+                        loaded();
                         return response.json();
                 });
                 
@@ -38,12 +50,16 @@
                 if(jsonStore.result != null){
                     queueArr = jsonStore.result;
                     let queueUl = document.querySelector('#queue ul');
-                    jsonStore.result.forEach(function(meal){
-                        // let li = document.createElement("li");
-                        // li.appendChild(document.createTextNode(meal));
-                        // queueUl.appendChild(li);
+                    for(let i=1; i<jsonStore.result.length; i++){
+                        let meal = jsonStore.result[i];
                         queueUl.innerHTML += "<li><span>"+meal+"</span> <img src='calendar-icon.png' class='schedule'><img src='trash-icon.png' class='deleteQueueItem'></li>";
-                    });
+                    }
+                    // jsonStore.result.forEach(function(meal){
+                    //     // let li = document.createElement("li");
+                    //     // li.appendChild(document.createTextNode(meal));
+                    //     // queueUl.appendChild(li);
+                    //     queueUl.innerHTML += "<li><span>"+meal+"</span> <img src='calendar-icon.png' class='schedule'><img src='trash-icon.png' class='deleteQueueItem'></li>";
+                    // });
                 }
                 
                 queuesListenForSchedule();
@@ -93,6 +109,7 @@
             }
 
             async function addToQueueJSON(meal) {
+                loading();
                 const jsonStore = await fetch('https://www.jsonstore.io/ab67964eeddb50e47e8c976258f550919003dcfdd59b7e2fac840d3bcd31f39e/queue')
                     .then(function(response) {
                         return response.json();
@@ -106,17 +123,20 @@
 
                 queueArr = jsonStore.result;
                 if(jsonStore.result == null){
-                    queueArr = [meal]
+                    queueArr = ["",meal];
                 } else {
                     queueArr.push(meal);
                 }
                 // console.log(queueArr);
+                loading();
                 fetch('https://www.jsonstore.io/ab67964eeddb50e47e8c976258f550919003dcfdd59b7e2fac840d3bcd31f39e/queue', {
                   headers: {
                     'Content-type': 'application/json'
                   },
                   method: 'PUT',
                   body: JSON.stringify(queueArr),
+                }).then(function(response){
+                    loaded();
                 });
             }
 
@@ -135,12 +155,15 @@
             });
 
             function clearQueue() {
+                loading();
                 fetch('https://www.jsonstore.io/ab67964eeddb50e47e8c976258f550919003dcfdd59b7e2fac840d3bcd31f39e/queue', {
                   headers: {
                     'Content-type': 'application/json'
                   },
                   method: 'PUT',
-                  body: JSON.stringify([]),
+                  body: JSON.stringify([""]),
+                }).then(function(response){
+                    loaded();
                 });
             }
 
@@ -151,12 +174,15 @@
             function deletefromQueue(mealT){
                 mealI = queueArr.indexOf(mealT);
                 queueArr.splice(mealI,1);
+                loading();
                 fetch('https://www.jsonstore.io/ab67964eeddb50e47e8c976258f550919003dcfdd59b7e2fac840d3bcd31f39e/queue', {
                     headers: {
                         'Content-type': 'application/json'
                     },
                     method: 'PUT',
                     body: JSON.stringify(queueArr),
+                }).then(function(response){
+                    loaded();
                 });
             }
 
@@ -172,6 +198,20 @@
                         // back end
                         let mealText = this.parentElement.firstChild.innerHTML;
                         deletefromQueue(mealText);
+                    });
+                });
+            }
+
+            function calendarMealsListenForQueue(){ //todo
+                let calMeals = document.getElementsByClassName("queueCalendarMeal");
+                Array.from(calMeals).forEach(function(element) {
+                    element.addEventListener('click', function(){
+                        let meal = this.parentElement.childNodes[0].innerText;
+                        let type = "meal";
+                        let day = this.parentElement.parentElement.parentElement.parentElement.childNodes[1].innerText;
+                        addToQueue(meal);
+                        removeFromCalendar(type,day,meal);
+                        this.parentElement.remove();
                     });
                 });
             }
@@ -208,6 +248,7 @@
 
             async function removeFromCalendar(type,day,name){
                 // type = "meal" or "event"
+                loading();
                 const jsonStore = await fetch('https://www.jsonstore.io/ab67964eeddb50e47e8c976258f550919003dcfdd59b7e2fac840d3bcd31f39e/calendar/'+day+'/'+type+'s')
                     .then(function(response) {
                         return response.json();
@@ -215,12 +256,15 @@
                 mealsOrEventsArr = jsonStore.result;
                 itemIndex = mealsOrEventsArr.indexOf(name);
                 mealsOrEventsArr.splice(itemIndex,1);
+                console.log(mealsOrEventsArr);
                 fetch('https://www.jsonstore.io/ab67964eeddb50e47e8c976258f550919003dcfdd59b7e2fac840d3bcd31f39e/calendar/'+day+'/'+type+'s', {
                   headers: {
                     'Content-type': 'application/json'
                   },
                   method: 'PUT',
                   body: JSON.stringify(mealsOrEventsArr),
+                }).then(function(response){
+                    loaded();
                 });
             }
 
@@ -255,13 +299,15 @@
 
             function scheduleMealFront(day,meal){
                 let targetDay = document.querySelector('#'+day.toLowerCase());
-                targetDay.childNodes[3].childNodes[1].innerHTML += `<li><span>${meal}</span> <img src='trash-icon.png' class='deleteCalendarMeal'></li>`;
+                targetDay.childNodes[3].childNodes[1].innerHTML += `<li><span>${meal}</span> <img src="queue-icon.png" class="queueCalendarMeal"> <img src='trash-icon.png' class='deleteCalendarMeal'></li>`;
 
+                calendarMealsListenForQueue();
                 calendarMealsListenForDelete();
             }
 
             async function scheduleMealBack(day,meal,reschedule) {
                 // reschedule is a boolean
+                loading();
                 const jsonStore = await fetch('https://www.jsonstore.io/ab67964eeddb50e47e8c976258f550919003dcfdd59b7e2fac840d3bcd31f39e/calendar/'+day+'/meals')
                     .then(function(response) {
                         return response.json();
@@ -276,6 +322,8 @@
                   },
                   method: 'PUT',
                   body: JSON.stringify(mealArr),
+                }).then(function(response){
+                    loaded();
                 });
 
                 if(reschedule){
@@ -293,8 +341,10 @@
             var calendarHash = {};
 
             async function showCalendar() {
+                loading();
                 const jsonStore = await fetch('https://www.jsonstore.io/ab67964eeddb50e47e8c976258f550919003dcfdd59b7e2fac840d3bcd31f39e/calendar')
                     .then(function(response) {
+                        loaded();
                         return response.json();
                 });
                 
@@ -312,7 +362,7 @@
                             let day = trDay.children[0].innerText;
                             let meals = calendarHash[day]["meals"];
                             for(let i = 1; i < meals.length; i++){
-                                trDay.childNodes[3].childNodes[1].innerHTML += `<li><span>${meals[i]}</span> <img src='trash-icon.png' class='deleteCalendarMeal'></li>`;
+                                trDay.childNodes[3].childNodes[1].innerHTML += `<li><span>${meals[i]}</span> <img src="queue-icon.png" class="queueCalendarMeal"> <img src='trash-icon.png' class='deleteCalendarMeal'></li>`;
                             }
                             let events = calendarHash[day]["events"];
                             for(let i = 1; i < events.length; i++){
@@ -321,6 +371,8 @@
                         }
                     });
                 }
+
+                calendarMealsListenForQueue();
                 calendarMealsListenForDelete();
                 calendarEventsListenForDelete();
             }
@@ -335,7 +387,8 @@
                     element.addEventListener('click', function(){
                         let userDay = this.parentElement.parentElement.childNodes[1].innerText;
                         let userMeal = prompt("Please enter the meal:")
-                        if(userMeal == ""){
+                        if(userMeal == null){}
+                        else if(userMeal == ""){
                             alert("Meal cannot be blank");
                         } else {
                             scheduleMealFront(userDay,userMeal);
@@ -356,7 +409,8 @@
                     element.addEventListener('click', function(){
                         let userDay = this.parentElement.parentElement.childNodes[1].innerText;
                         let userEvent = prompt("Please enter the event:");
-                        if(userEvent == ""){
+                        if(userEvent == null){}
+                        else if(userEvent == ""){
                             alert("Event cannot be blank");
                         } else {
                             scheduleEventFront(userDay,userEvent);
@@ -376,6 +430,7 @@
             }
 
             async function scheduleEventBack(day,event) {
+                loading();
                 const jsonStore = await fetch('https://www.jsonstore.io/ab67964eeddb50e47e8c976258f550919003dcfdd59b7e2fac840d3bcd31f39e/calendar/'+day+'/events')
                     .then(function(response) {
                         return response.json();
@@ -390,6 +445,8 @@
                   },
                   method: 'PUT',
                   body: JSON.stringify(eventArr),
+                }).then(function(response){
+                    loaded();
                 });
             }
 
@@ -447,12 +504,15 @@
                         "events":[""]
                     }
                 }
+                loading();
                 fetch('https://www.jsonstore.io/ab67964eeddb50e47e8c976258f550919003dcfdd59b7e2fac840d3bcd31f39e/calendar', {
                   headers: {
                     'Content-type': 'application/json'
                   },
                   method: 'PUT',
                   body: JSON.stringify(emptyCal),
+                }).then(function(response){
+                    loaded();
                 });
             }
 
@@ -573,6 +633,50 @@
 
         /*}*/
 
+        html, body {
+            width: 100%;
+            height: 100%;
+        }
+
+        /*#loading {
+            position: absolute;
+            margin:auto;
+            text-align: center;
+            background-color: rgba(100,100,100,0.5);
+            width: 100%;
+            height: 100%;
+            z-index: 5;
+            width:100%; 
+            height:100%; 
+            background:url(loading.gif) center center no-repeat;
+        }
+
+        #loading img {
+
+        }*/
+
+        #loading {
+            background-color: rgba(100,100,100,0.5);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 3;
+        }
+
+        #loading img {
+            background-color: rgba;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 100px;
+            height: 100px;
+            margin-top: -50px; /* Half the height */
+            margin-left: -50px; /* Half the width */
+            z-index: 4;
+        }
+
         h1 {
             margin: 10px 0;
             font-family: 'Oswald', sans-serif;
@@ -643,7 +747,7 @@
             text-align: center;
         }
 
-        .deleteQueueItem, .deleteCalendarMeal, .deleteCalendarEvent {
+        .deleteQueueItem, .deleteCalendarMeal, .deleteCalendarEvent, .queueCalendarMeal {
             height: 20px;
             position: relative;
             top: -3px;
@@ -748,6 +852,8 @@
 </head>
 
 <body>
+
+    <div id="loading"><img src="loading.gif"></div>
 
     <h1 class="text-center"><img src="mealfred-logo-white-sm.png" class="icon">MEalfred</h1>
 
