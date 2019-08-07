@@ -335,8 +335,12 @@
                     element.addEventListener('click', function(){
                         let userDay = this.parentElement.parentElement.childNodes[1].innerText;
                         let userMeal = prompt("Please enter the meal:")
-                        scheduleMealFront(userDay,userMeal);
-                        scheduleMealBack(userDay,userMeal);
+                        if(userMeal == ""){
+                            alert("Meal cannot be blank");
+                        } else {
+                            scheduleMealFront(userDay,userMeal);
+                            scheduleMealBack(userDay,userMeal);
+                        }
                     });
                 });
             }
@@ -351,9 +355,14 @@
                 Array.from(allEventsPlus).forEach(function(element) {
                     element.addEventListener('click', function(){
                         let userDay = this.parentElement.parentElement.childNodes[1].innerText;
-                        let userEvent = prompt("Please enter the event:")
-                        scheduleEventFront(userDay,userEvent);
-                        scheduleEventBack(userDay,userEvent);
+                        let userEvent = prompt("Please enter the event:");
+                        if(userEvent == ""){
+                            alert("Event cannot be blank");
+                        } else {
+                            scheduleEventFront(userDay,userEvent);
+                            scheduleEventBack(userDay,userEvent);
+                        }
+                        
                     });
                 });
             }
