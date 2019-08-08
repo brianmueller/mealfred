@@ -103,7 +103,7 @@
                         let catalogMeal = this.parentElement.childNodes[1].childNodes[1].childNodes[1].firstChild.innerHTML;
                         console.log(catalogMeal);
                         addToQueue(catalogMeal);
-                        alert(catalogMeal + " added");
+                        this.src="plus-icon-blue.png";
                     });
                 });
             }
@@ -639,7 +639,7 @@
         }
 
         #loading {
-            background-color: rgba(100,100,100,0.75);
+            background-color: rgba(100,100,100,0.5);
             position: fixed;
             top: 0;
             left: 0;
