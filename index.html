@@ -31,7 +31,7 @@
             let queueArr = [""];
             let mealIndex = 0;
             let mealText = "";
-            let reschedule = false;
+            let source = "manual"; // source of calendar meal
 
             async function showQueue() {
                 loading();
@@ -200,7 +200,7 @@
                 Array.from(calMeals).forEach(function(element) {
                     element.addEventListener('click', function(){
                         // front end
-                        reschedule = true;
+                        source = "calendar";
                         mealText = this.parentElement.childNodes[0].innerText;
                         $('#scheduler').css('display','block');
                         
@@ -273,7 +273,7 @@
                 Array.from(queues).forEach(function(element) {
                     element.addEventListener('click', function(){
                         // front end
-                        reschedule = false;
+                        source = "queue";
                         mealText = this.parentElement.childNodes[0].innerText;
                         $('#scheduler').css('display','block');
                         this.parentElement.remove();
@@ -287,7 +287,7 @@
                     day.addEventListener('click', function(){
                         let dayText = this.innerText;
                         scheduleMealFront(dayText,mealText);
-                        scheduleMealBack(dayText,mealText,reschedule); // reschedule is a boolean
+                        scheduleMealBack(dayText,mealText,source); // source is either "queue","calendar", or "manual"
                         $('#scheduler').css('display','none');
                     });
                 });
@@ -303,8 +303,8 @@
                 calendarMealsListenForDelete();
             }
 
-            async function scheduleMealBack(day,meal,reschedule) {
-                // reschedule is a boolean
+            async function scheduleMealBack(day,meal,source) {
+                // source: "queue", "calendar", "manual"
                 loading();
                 const jsonStore = await fetch('https://www.jsonstore.io/ab67964eeddb50e47e8c976258f550919003dcfdd59b7e2fac840d3bcd31f39e/calendar/'+day+'/meals')
                     .then(function(response) {
@@ -324,7 +324,7 @@
                     loaded();
                 });
 
-                if(!reschedule){
+                if(source == "queue"){
                     deletefromQueue(meal);
                 }
             }
