@@ -591,6 +591,22 @@
                 lastTouchEnd = now;
             }, false);
 
+            // shuffle
+            function sticktothebottom() {
+                var window_top = $(window).scrollTop();
+                var top = $('#all').offset().top-window.innerHeight;
+                if (window_top > top) {
+                    $('#shuffle').addClass('stick');
+                    $('#all').height($('#stickThis').outerHeight());
+                } else {
+                    $('#shuffle').removeClass('stick');
+                    $('#all').height(0);
+                }
+            }
+            $(window).scroll(sticktothebottom);
+            sticktothetop();
+
+
         }); //ready
     </script>
 
@@ -696,7 +712,6 @@
             height: 20px;
         }
 
-        /*todo*/
         tbody th {
             font-size: 2em;
             display: block;
@@ -777,10 +792,15 @@
         }
         
         #shuffle {
+
+        }
+
+        #shuffle.stick {
+            margin-top: 0;
             position: fixed;
-            z-index: 1;
             bottom: 5px;
             right: 10px;
+            z-index: 9999;
         }
 
         #shuffle-btn {
@@ -793,6 +813,8 @@
             top: -2px;
             width: 40px;
         }
+
+        
     </style>
 </head>
 
@@ -801,8 +823,6 @@
     <div id="loading"><img src="loading.gif"></div>
 
     <h1 class="text-center"><img src="mealfred-logo-white-sm.png" class="icon">MEalfred</h1>
-
-    <div id="shuffle" class="text-center"><button class="btn btn-primary text-center" id="shuffle-btn"><img src="shuffle-white.png" class="icon"></button></div>
 
     <div id="scheduler">
         <div class="schedulerText" class="container">
@@ -926,6 +946,8 @@
 
         <div class="row" id="all">
         </div>
+
+        <div id="shuffle" class="text-center"><button class="btn btn-primary text-center" id="shuffle-btn"><img src="shuffle-white.png" class="icon"></button></div>
 
         <!--</div>-->
     </div>
