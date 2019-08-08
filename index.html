@@ -179,7 +179,7 @@
                 });
             }
 
-            function calendarMealsListenForQueue(){ //todo
+            function calendarMealsListenForQueue(){
                 let calMeals = document.getElementsByClassName("queueCalendarMeal");
                 Array.from(calMeals).forEach(function(element) {
                     element.addEventListener('click', function(){
@@ -274,7 +274,7 @@
 
             function scheduleMealFront(day,meal){
                 let targetDay = document.querySelector('#'+day.toLowerCase());
-                targetDay.childNodes[3].childNodes[1].innerHTML += `<li><span>${meal}</span> <img src="queue-icon.png" class="queueCalendarMeal"> <img src='trash-icon.png' class='deleteCalendarMeal'></li>`;
+                targetDay.childNodes[3].childNodes[1].innerHTML += `<li><span>${meal}</span> <br><img src="queue-icon.png" class="queueCalendarMeal"> <img src='trash-icon.png' class='deleteCalendarMeal'></li>`;
 
                 calendarMealsListenForQueue();
                 calendarMealsListenForDelete();
@@ -332,11 +332,11 @@
                             let day = trDay.children[0].innerText;
                             let meals = calendarHash[day]["meals"];
                             for(let i = 1; i < meals.length; i++){
-                                trDay.childNodes[3].childNodes[1].innerHTML += `<li><span>${meals[i]}</span> <img src="queue-icon.png" class="queueCalendarMeal"> <img src='trash-icon.png' class='deleteCalendarMeal'></li>`;
+                                trDay.childNodes[3].childNodes[1].innerHTML += `<li><span>${meals[i]}</span> <br><img src="queue-icon.png" class="queueCalendarMeal"> <img src='trash-icon.png' class='deleteCalendarMeal'></li>`;
                             }
                             let events = calendarHash[day]["events"];
                             for(let i = 1; i < events.length; i++){
-                                trDay.childNodes[5].childNodes[1].innerHTML += `<li><span>${events[i]}</span> <img src='trash-icon.png' class='deleteCalendarEvent'></li>`;
+                                trDay.childNodes[5].childNodes[1].innerHTML += `<li><span>${events[i]}</span> <br><img src='trash-icon.png' class='deleteCalendarEvent'></li>`;
                             }
                         }
                     });
@@ -394,7 +394,7 @@
 
             function scheduleEventFront(day,event){
                 let targetDay = document.querySelector('#'+day.toLowerCase());
-                targetDay.childNodes[5].childNodes[1].innerHTML += `<li><span>${event}</span> <img src='trash-icon.png' class='deleteCalendarEvent'></li>`;
+                targetDay.childNodes[5].childNodes[1].innerHTML += `<li><span>${event}</span> <br><img src='trash-icon.png' class='deleteCalendarEvent'></li>`;
 
                 calendarEventsListenForDelete();
             }
@@ -694,6 +694,18 @@
 
         .plus-icon {
             height: 20px;
+        }
+
+        /*todo*/
+        tbody th {
+            font-size: 2em;
+            display: block;
+            /*word-break: break-all;*/
+            font-family: monospace;
+            width: 3ch;
+            overflow: hidden;
+            white-space: nowrap;
+            width:58px;
         }
 
         .card-title {
