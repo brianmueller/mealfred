@@ -19,12 +19,10 @@
         $(function() {
 
             function loading(){
-                // document.querySelector('body').style.backgroundColor = 'pink';
                 document.querySelector('#loading').style.display = 'block';
             }
 
             function loaded(){
-                // document.querySelector('body').style.backgroundColor = 'white';
                 document.querySelector('#loading').style.display = 'none';
             }
 
@@ -42,11 +40,6 @@
                         return response.json();
                 });
                 
-                // console.log(jsonStore.result);
-
-                // jsonStore.result.forEach(function(meal){
-                //     console.log(meal);
-                // });
                 if(jsonStore.result != null){
                     queueArr = jsonStore.result;
                     let queueUl = document.querySelector('#queue ul');
@@ -54,12 +47,6 @@
                         let meal = jsonStore.result[i];
                         queueUl.innerHTML += "<li><span>"+meal+"</span> <img src='calendar-icon.png' class='schedule'><img src='trash-icon.png' class='deleteQueueItem'></li>";
                     }
-                    // jsonStore.result.forEach(function(meal){
-                    //     // let li = document.createElement("li");
-                    //     // li.appendChild(document.createTextNode(meal));
-                    //     // queueUl.appendChild(li);
-                    //     queueUl.innerHTML += "<li><span>"+meal+"</span> <img src='calendar-icon.png' class='schedule'><img src='trash-icon.png' class='deleteQueueItem'></li>";
-                    // });
                 }
                 
                 queuesListenForSchedule();
@@ -100,7 +87,6 @@
                 Array.from(allCatalogPlus).forEach(function(element) {
                     element.addEventListener('click', function(){
                         let catalogMeal = this.parentElement.childNodes[1].childNodes[1].childNodes[1].firstChild.innerHTML;
-                        console.log(catalogMeal);
                         addToQueue(catalogMeal);
                         this.src="plus-icon-blue.png";
                     });
@@ -114,19 +100,12 @@
                         return response.json();
                 });
                 
-                // console.log(jsonStore.result.queue);
-
-                // jsonStore.result.queue.forEach(function(meal){
-                //     console.log(meal);
-                // });
-
                 queueArr = jsonStore.result;
                 if(jsonStore.result == null){
                     queueArr = ["",meal];
                 } else {
                     queueArr.push(meal);
                 }
-                // console.log(queueArr);
                 loading();
                 fetch('https://www.jsonstore.io/ab67964eeddb50e47e8c976258f550919003dcfdd59b7e2fac840d3bcd31f39e/queue', {
                   headers: {
@@ -187,7 +166,6 @@
 
             function queuesListenForDelete(){
                 let queues = document.getElementsByClassName("deleteQueueItem");
-                // console.log(queues);
 
                 Array.from(queues).forEach(function(element) {
                     element.addEventListener('click', function(){
@@ -255,7 +233,6 @@
                 mealsOrEventsArr = jsonStore.result;
                 itemIndex = mealsOrEventsArr.indexOf(name);
                 mealsOrEventsArr.splice(itemIndex,1);
-                console.log(mealsOrEventsArr);
                 fetch('https://www.jsonstore.io/ab67964eeddb50e47e8c976258f550919003dcfdd59b7e2fac840d3bcd31f39e/calendar/'+day+'/'+type+'s', {
                   headers: {
                     'Content-type': 'application/json'
@@ -271,7 +248,6 @@
 
             function queuesListenForSchedule(){
                 let queues = document.getElementsByClassName("schedule");
-                // console.log(queues);
 
                 Array.from(queues).forEach(function(element) {
                     element.addEventListener('click', function(){
@@ -326,7 +302,7 @@
                 });
 
                 if(reschedule){
-
+                    // to-do
                 } else {
                     deletefromQueue(meal)
                 }
@@ -346,12 +322,7 @@
                         loaded();
                         return response.json();
                 });
-                
-                // console.log(jsonStore.result);
 
-                // jsonStore.result.forEach(function(meal){
-                //     console.log(meal);
-                // });
                 if(jsonStore.result != null){
                     calendarHash = jsonStore.result;
                     let calendarBody = document.querySelector('#calendar tbody');
@@ -549,10 +520,8 @@
                     acc[values[0][i]] = cur;
                     return acc;
                 }, {}));
-                // console.log(recipes);
 
                 recipes.forEach(function(recipe, index) {
-                    // all.innerHTML += `<div class="col-6 col-sm-3"><h3>${recipe.Title}</h3><img class="img-responsive" src=${recipe.Jpgsq}></div>`;
                     var toAdd = ""
                     toAdd += `
                     <div class="col-6 col-md-3">
@@ -626,12 +595,6 @@
     </script>
 
     <style>
-        /*body > div > div > div.col-sm-3 > div > div {*/
-
-        /*    padding: 10px;*/
-
-        /*}*/
-
         html, body {
             width: 100%;
             height: 100%;
@@ -706,12 +669,6 @@
             width: 100%;
             height: 100%;
             color: white;
-            /*position: absolute;*/
-            /*top: 50%;*/
-            /*left: 50%;*/
-            /*font-size: 50px;*/
-            /*transform: translate(-50%, -50%);*/
-            /*-ms-transform: translate(-50%, -50%);*/
         }
 
         .schedulerText h1 {
@@ -800,12 +757,6 @@
             width: 100%;
             height: 100%;
             color: white;
-            /*position: absolute;*/
-            /*top: 50%;*/
-            /*left: 50%;*/
-            /*font-size: 50px;*/
-            /*transform: translate(-50%, -50%);*/
-            /*-ms-transform: translate(-50%, -50%);*/
         }
 
         .overlayText h1 {
@@ -839,7 +790,6 @@
 
     <h1 class="text-center"><img src="mealfred-logo-white-sm.png" class="icon">MEalfred</h1>
 
-    <!--<span class="text-center" id="shuffle">Shuffle</span>-->
     <div id="shuffle" class="text-center"><button class="btn btn-primary text-center" id="shuffle-btn"><img src="shuffle-white.png" class="icon"></button></div>
 
     <div id="scheduler">
@@ -961,19 +911,6 @@
 
             </div>
         </div>
-
-        <!--<div class="row display-flex">-->
-
-        <!--<div class="col-6 col-md-3">-->
-        <!--    <div class="card">-->
-        <!--        <div class="card-body">-->
-        <!--            <h5 class="card-title">Recipe Name</h5>-->
-        <!--            <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>-->
-        <!--            <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>-->
-        <!--        </div>-->
-        <!--        <img src="https://lh3.googleusercontent.com/CVADx4ooZwn5vId4lUbYFXWVgW0psw0M_eM6m3spPdyjw8Usofm40w7Hjg3mfrgOkJvrZ71MxoBbIO_GicBpKGFpRXTjRwIf1uatpHIzoz5SIdtTJy6u7NPaHGO1vd9xGnP318A8K1Q=h400-w400-c" class="card-img-top">-->
-        <!--    </div>-->
-        <!--</div>-->
 
         <div class="row" id="all">
         </div>
