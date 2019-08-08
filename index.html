@@ -674,7 +674,32 @@
         .box {
             border: 2px solid black;
             margin-bottom: 10px;
-            padding: 10px;
+            margin: 0 5px 10px;
+            padding: 10px 0;
+        }
+
+        #queue {
+            padding: 0 10px 10px;
+        }
+
+        #calendar {
+            padding: 0 0 10px;
+        }
+
+        #queueHeading {
+            color: #3f89c1; /*blue*/
+            font-weight: 800;
+            font-family: 'Oswald', sans-serif;
+        }
+
+        #calendarHeading {
+            color: #ff2a1d; /*red*/
+            font-weight: 800;
+            font-family: 'Oswald', sans-serif;
+        }
+
+        .text-muted {
+            font-weight: 200;
         }
 
         .box ul {
@@ -871,108 +896,112 @@
 
 
     <div class="container">
-        <div class="box">
-            <h2 class="text-center">Queue</h2>
-            <h5 id="clearQueue" class="text-muted text-center">[clear]</h5>
-            <div id="queue">
-                <ul></ul>
-                <img src="plus-icon.png" class="plus-icon" id="plusQueue">
+        <div class="row">
+            <div class="box col-sm-12">
+                <h2 class="text-center" id="queueHeading">Queue</h2>
+                <h5 id="clearQueue" class="text-muted text-center">[clear]</h5>
+                <div id="queue">
+                    <ul></ul>
+                    <img src="plus-icon.png" class="plus-icon" id="plusQueue">
+                </div>
             </div>
         </div>
 
-        <div class="box">
-            <h2 class="text-center">Calendar</h2>
-            <div id="calendar">
-            <h5 id="clearCalendar" class="text-muted text-center">[clear]</h5>
-                <table class="table table-striped">
-                    <thead class="thead-dark">
-                        <tr>
-                            <th scope="col">Day</th>
-                            <th scope="col">Meal(s)</th>
-                            <th scope="col">Event(s)</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr id="saturday">
-                            <th scope="row">Saturday</th>
-                            <td class="meals">
-                                <ul></ul>
-                                <img src="plus-icon.png" class="plus-icon plusMeal">
-                            </td>
-                            <td class="events">
-                                <ul></ul>
-                                <img src="plus-icon.png" class="plus-icon plusEvent">
-                            </td>
-                        </tr>
-                        <tr id="sunday">
-                            <th scope="row">Sunday</th>
-                            <td class="meals">
-                                <ul></ul>
-                                <img src="plus-icon.png" class="plus-icon plusMeal">
-                            </td>
-                            <td class="events">
-                                <ul></ul>
-                                <img src="plus-icon.png" class="plus-icon plusEvent">
-                            </td>
-                        </tr>
-                        <tr id="monday">
-                            <th scope="row">Monday</th>
-                            <td class="meals">
-                                <ul></ul>
-                                <img src="plus-icon.png" class="plus-icon plusMeal">
-                            </td>
-                            <td class="events">
-                                <ul></ul>
-                                <img src="plus-icon.png" class="plus-icon plusEvent">
-                            </td>
-                        </tr>
-                        <tr id="tuesday">
-                            <th scope="row">Tuesday</th>
-                            <td class="meals">
-                                <ul></ul>
-                                <img src="plus-icon.png" class="plus-icon plusMeal">
-                            </td>
-                            <td class="events">
-                                <ul></ul>
-                                <img src="plus-icon.png" class="plus-icon plusEvent">
-                            </td>
-                        </tr>
-                        <tr id="wednesday">
-                            <th scope="row">Wednesday</th>
-                            <td class="meals">
-                                <ul></ul>
-                                <img src="plus-icon.png" class="plus-icon plusMeal">
-                            </td>
-                            <td class="events">
-                                <ul></ul>
-                                <img src="plus-icon.png" class="plus-icon plusEvent">
-                            </td>
-                        </tr>
-                        <tr id="thursday">
-                            <th scope="row">Thursday</th>
-                            <td class="meals">
-                                <ul></ul>
-                                <img src="plus-icon.png" class="plus-icon plusMeal">
-                            </td>
-                            <td class="events">
-                                <ul></ul>
-                                <img src="plus-icon.png" class="plus-icon plusEvent">
-                            </td>
-                        </tr>
-                        <tr id="friday">
-                            <th scope="row">Friday</th>
-                            <td class="meals">
-                                <ul></ul>
-                                <img src="plus-icon.png" class="plus-icon plusMeal">
-                            </td>
-                            <td class="events">
-                                <ul></ul>
-                                <img src="plus-icon.png" class="plus-icon plusEvent">
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+        <div class="row">
+            <div class="box col-sm-12">
+                <h2 class="text-center" id="calendarHeading">Calendar</h2>
+                <h5 id="clearCalendar" class="text-muted text-center">[clear]</h5>
+                <div id="calendar">
+                    <table class="table table-striped">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th scope="col">Day</th>
+                                <th scope="col">Meal(s)</th>
+                                <th scope="col">Event(s)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr id="saturday">
+                                <th scope="row">Saturday</th>
+                                <td class="meals">
+                                    <ul></ul>
+                                    <img src="plus-icon.png" class="plus-icon plusMeal">
+                                </td>
+                                <td class="events">
+                                    <ul></ul>
+                                    <img src="plus-icon.png" class="plus-icon plusEvent">
+                                </td>
+                            </tr>
+                            <tr id="sunday">
+                                <th scope="row">Sunday</th>
+                                <td class="meals">
+                                    <ul></ul>
+                                    <img src="plus-icon.png" class="plus-icon plusMeal">
+                                </td>
+                                <td class="events">
+                                    <ul></ul>
+                                    <img src="plus-icon.png" class="plus-icon plusEvent">
+                                </td>
+                            </tr>
+                            <tr id="monday">
+                                <th scope="row">Monday</th>
+                                <td class="meals">
+                                    <ul></ul>
+                                    <img src="plus-icon.png" class="plus-icon plusMeal">
+                                </td>
+                                <td class="events">
+                                    <ul></ul>
+                                    <img src="plus-icon.png" class="plus-icon plusEvent">
+                                </td>
+                            </tr>
+                            <tr id="tuesday">
+                                <th scope="row">Tuesday</th>
+                                <td class="meals">
+                                    <ul></ul>
+                                    <img src="plus-icon.png" class="plus-icon plusMeal">
+                                </td>
+                                <td class="events">
+                                    <ul></ul>
+                                    <img src="plus-icon.png" class="plus-icon plusEvent">
+                                </td>
+                            </tr>
+                            <tr id="wednesday">
+                                <th scope="row">Wednesday</th>
+                                <td class="meals">
+                                    <ul></ul>
+                                    <img src="plus-icon.png" class="plus-icon plusMeal">
+                                </td>
+                                <td class="events">
+                                    <ul></ul>
+                                    <img src="plus-icon.png" class="plus-icon plusEvent">
+                                </td>
+                            </tr>
+                            <tr id="thursday">
+                                <th scope="row">Thursday</th>
+                                <td class="meals">
+                                    <ul></ul>
+                                    <img src="plus-icon.png" class="plus-icon plusMeal">
+                                </td>
+                                <td class="events">
+                                    <ul></ul>
+                                    <img src="plus-icon.png" class="plus-icon plusEvent">
+                                </td>
+                            </tr>
+                            <tr id="friday">
+                                <th scope="row">Friday</th>
+                                <td class="meals">
+                                    <ul></ul>
+                                    <img src="plus-icon.png" class="plus-icon plusMeal">
+                                </td>
+                                <td class="events">
+                                    <ul></ul>
+                                    <img src="plus-icon.png" class="plus-icon plusEvent">
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
 
+                </div>
             </div>
         </div>
 
