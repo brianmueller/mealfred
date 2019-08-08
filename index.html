@@ -84,13 +84,12 @@
 
             // user text
             document.querySelector("#plusQueue").addEventListener("click",function(){
-                let userToAdd = document.querySelector("#queueToAdd").value;
-                // console.log(userToAdd);
-                if(userToAdd == ""){
-                    alert("Please enter a meal");
-                }else {
-                    addToQueue(userToAdd);
-                    document.querySelector("#queueToAdd").value = "";
+                let userMeal = prompt("Please enter the meal:")
+                if(userMeal == null){}
+                else if(userMeal == ""){
+                    alert("Meal cannot be blank");
+                } else {
+                    addToQueue(userMeal);
                 }
             });
 
@@ -863,9 +862,7 @@
             <h5 id="clearQueue" class="text-muted text-center">[clear]</h5>
             <div id="queue">
                 <ul></ul>
-                <ul>
-                    <li><input id="queueToAdd"><img src="plus-icon.png" class="plus-icon" id="plusQueue"></li>
-                </ul>
+                <img src="plus-icon.png" class="plus-icon" id="plusQueue">
             </div>
         </div>
 
