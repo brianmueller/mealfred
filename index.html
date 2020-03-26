@@ -31,6 +31,8 @@
     <script>
         $(function() {
 
+            let baseUrl = "https://www.jsonstore.io/ab67964eeddb50e47e8c976258f550919003dcfdd59b7e2fac840d3bcd31f39e/"
+
             function loading(){
                 document.querySelector('#loading').style.display = 'block';
             }
@@ -48,7 +50,7 @@
 
             async function showQueue() {
                 loading();
-                const jsonStore = await fetch('https://www.jsonstore.io/ab67964eeddb50e47e8c976258f550919003dcfdd59b7e2fac840d3bcd31f39e/queue')
+                const jsonStore = await fetch(baseURL+'queue')
                     .then(function(response) {
                         loaded();
                         return response.json();
@@ -109,7 +111,7 @@
 
             async function addToQueueJSON(meal) {
                 loading();
-                const jsonStore = await fetch('https://www.jsonstore.io/ab67964eeddb50e47e8c976258f550919003dcfdd59b7e2fac840d3bcd31f39e/queue')
+                const jsonStore = await fetch(baseUrl+'queue')
                     .then(function(response) {
                         return response.json();
                 });
@@ -121,7 +123,7 @@
                     queueArr.push(meal);
                 }
                 loading();
-                fetch('https://www.jsonstore.io/ab67964eeddb50e47e8c976258f550919003dcfdd59b7e2fac840d3bcd31f39e/queue', {
+                fetch(baseUrl+'queue', {
                   headers: {
                     'Content-type': 'application/json'
                   },
@@ -148,7 +150,7 @@
 
             function clearQueue() {
                 loading();
-                fetch('https://www.jsonstore.io/ab67964eeddb50e47e8c976258f550919003dcfdd59b7e2fac840d3bcd31f39e/queue', {
+                fetch(baseUrl+'queue', {
                   headers: {
                     'Content-type': 'application/json'
                   },
@@ -167,7 +169,7 @@
                 mealI = queueArr.indexOf(mealT);
                 queueArr.splice(mealI,1);
                 loading();
-                fetch('https://www.jsonstore.io/ab67964eeddb50e47e8c976258f550919003dcfdd59b7e2fac840d3bcd31f39e/queue', {
+                fetch(baseUrl+'queue', {
                     headers: {
                         'Content-type': 'application/json'
                     },
@@ -260,14 +262,14 @@
             async function removeFromCalendar(type,day,name){
                 // type = "meal" or "event"
                 loading();
-                const jsonStore = await fetch('https://www.jsonstore.io/ab67964eeddb50e47e8c976258f550919003dcfdd59b7e2fac840d3bcd31f39e/calendar/'+day+'/'+type+'s')
+                const jsonStore = await fetch(baseUrl+'calendar/'+day+'/'+type+'s')
                     .then(function(response) {
                         return response.json();
                 });
                 mealsOrEventsArr = jsonStore.result;
                 itemIndex = mealsOrEventsArr.indexOf(name);
                 mealsOrEventsArr.splice(itemIndex,1);
-                fetch('https://www.jsonstore.io/ab67964eeddb50e47e8c976258f550919003dcfdd59b7e2fac840d3bcd31f39e/calendar/'+day+'/'+type+'s', {
+                fetch(baseUrl+'calendar/'+day+'/'+type+'s', {
                   headers: {
                     'Content-type': 'application/json'
                   },
@@ -319,7 +321,7 @@
             async function scheduleMealBack(day,meal,source) {
                 // source: "queue", "calendar", "manual"
                 loading();
-                const jsonStore = await fetch('https://www.jsonstore.io/ab67964eeddb50e47e8c976258f550919003dcfdd59b7e2fac840d3bcd31f39e/calendar/'+day+'/meals')
+                const jsonStore = await fetch(baseUrl+'calendar/'+day+'/meals')
                     .then(function(response) {
                         return response.json();
                 });
@@ -327,7 +329,7 @@
                 mealArr = jsonStore.result;
                 mealArr.push(meal);
 
-                fetch('https://www.jsonstore.io/ab67964eeddb50e47e8c976258f550919003dcfdd59b7e2fac840d3bcd31f39e/calendar/'+day+'/meals', {
+                fetch(baseUrl+'calendar/'+day+'/meals', {
                   headers: {
                     'Content-type': 'application/json'
                   },
@@ -351,7 +353,7 @@
 
             async function showCalendar() {
                 loading();
-                const jsonStore = await fetch('https://www.jsonstore.io/ab67964eeddb50e47e8c976258f550919003dcfdd59b7e2fac840d3bcd31f39e/calendar')
+                const jsonStore = await fetch(baseUrl+'calendar')
                     .then(function(response) {
                         loaded();
                         return response.json();
@@ -436,7 +438,7 @@
 
             async function scheduleEventBack(day,event) {
                 loading();
-                const jsonStore = await fetch('https://www.jsonstore.io/ab67964eeddb50e47e8c976258f550919003dcfdd59b7e2fac840d3bcd31f39e/calendar/'+day+'/events')
+                const jsonStore = await fetch(baseUrl+'calendar/'+day+'/events')
                     .then(function(response) {
                         return response.json();
                 });
@@ -444,7 +446,7 @@
                 eventArr = jsonStore.result;
                 eventArr.push(event);
 
-                fetch('https://www.jsonstore.io/ab67964eeddb50e47e8c976258f550919003dcfdd59b7e2fac840d3bcd31f39e/calendar/'+day+'/events', {
+                fetch(baseUrl+'calendar/'+day+'/events', {
                   headers: {
                     'Content-type': 'application/json'
                   },
@@ -510,7 +512,7 @@
                     }
                 }
                 loading();
-                fetch('https://www.jsonstore.io/ab67964eeddb50e47e8c976258f550919003dcfdd59b7e2fac840d3bcd31f39e/calendar', {
+                fetch(baseUrl+'calendar', {
                   headers: {
                     'Content-type': 'application/json'
                   },
