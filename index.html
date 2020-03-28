@@ -33,7 +33,7 @@
 
             let baseURL = "https://jsonbox.io/box_01ab51182a68189839b6/";
             let queueID = "5e7d568ec0c3bf0017b544ae";
-            let calendarID = "";
+            let calendarID = "5e7f1afdf110e400171b8968";
 
             function loading(){
                 document.querySelector('#loading').style.display = 'block';
@@ -264,19 +264,19 @@
             async function removeFromCalendar(type,day,name){
                 // type = "meal" or "event"
                 loading();
-                const jsonStore = await fetch(baseURL+'calendar/'+day+'/'+type+'s')
+                const jsonStore = await fetch(baseURL+calendarID)
                     .then(function(response) {
                         return response.json();
                 });
-                mealsOrEventsArr = jsonStore.result;
-                itemIndex = mealsOrEventsArr.indexOf(name);
-                mealsOrEventsArr.splice(itemIndex,1);
-                fetch(baseURL+'calendar/'+day+'/'+type+'s', {
+                calendarHash = jsonStore.calendar;
+                itemIndex = calendarHash[day][type+'s'].indexOf(name);
+                calendarHash[day][type+'s'].splice(itemIndex,1);
+                fetch(baseURL+calendarID, {
                   headers: {
                     'Content-type': 'application/json'
                   },
                   method: 'PUT',
-                  body: JSON.stringify(mealsOrEventsArr),
+                  body: JSON.stringify({"calendar":calendarHash}),
                 }).then(function(response){
                     loaded();
                 });
@@ -323,20 +323,20 @@
             async function scheduleMealBack(day,meal,source) {
                 // source: "queue", "calendar", "manual"
                 loading();
-                const jsonStore = await fetch(baseURL+'calendar/'+day+'/meals')
+                const jsonStore = await fetch(baseURL+calendarID)
                     .then(function(response) {
                         return response.json();
                 });
                 
-                mealArr = jsonStore.result;
-                mealArr.push(meal);
+                calendarHash = jsonStore.calendar;
+                calendarHash[day].meals.push(meal);
 
-                fetch(baseURL+'calendar/'+day+'/meals', {
+                fetch(baseURL+calendarID, {
                   headers: {
                     'Content-type': 'application/json'
                   },
                   method: 'PUT',
-                  body: JSON.stringify(mealArr),
+                  body: JSON.stringify({"calendar":calendarHash}),
                 }).then(function(response){
                     loaded();
                 });
@@ -355,14 +355,14 @@
 
             async function showCalendar() {
                 loading();
-                const jsonStore = await fetch(baseURL+'calendar')
+                const jsonStore = await fetch(baseURL+calendarID)
                     .then(function(response) {
                         loaded();
                         return response.json();
                 });
 
-                if(jsonStore.result != null){
-                    calendarHash = jsonStore.result;
+                if(jsonStore.calendar != null){
+                    calendarHash = jsonStore.calendar;
                     let calendarBody = document.querySelector('#calendar tbody');
                     
                     calendarBody.childNodes.forEach(function(trDay){
@@ -440,20 +440,21 @@
 
             async function scheduleEventBack(day,event) {
                 loading();
-                const jsonStore = await fetch(baseURL+'calendar/'+day+'/events')
+                // const jsonStore = await fetch(baseURL+'calendar/'+day+'/events')
+                const jsonStore = await fetch(baseURL+calendarID)
                     .then(function(response) {
                         return response.json();
                 });
                 
-                eventArr = jsonStore.result;
-                eventArr.push(event);
+                calendarHash = jsonStore.calendar;
+                calendarHash[day].events.push(event);
 
-                fetch(baseURL+'calendar/'+day+'/events', {
+                fetch(baseURL+calendarID, {
                   headers: {
                     'Content-type': 'application/json'
                   },
                   method: 'PUT',
-                  body: JSON.stringify(eventArr),
+                  body: JSON.stringify({"calendar":calendarHash}),
                 }).then(function(response){
                     loaded();
                 });
@@ -514,12 +515,12 @@
                     }
                 }
                 loading();
-                fetch(baseURL+'calendar', {
+                fetch(baseURL+calendarID, {
                   headers: {
                     'Content-type': 'application/json'
                   },
                   method: 'PUT',
-                  body: JSON.stringify(emptyCal),
+                  body: JSON.stringify({"calendar":emptyCal}),
                 }).then(function(response){
                     loaded();
                 });
