@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+    <script>
+        $(function() {
+
+            let baseURL = "https://jsonbox.io/box_01ab51182a68189839b6/";
+            let queueID = "5e7d568ec0c3bf0017b544ae";
+            let calendarID = "5e7f1afdf110e400171b8968";
+            
+            async function showQueue() {
+                const jsonStore = await fetch(baseURL+queueID)
+                    .then(function(response) {
+                        // console.log(response.json());
+                        return response.json();
+                });
+
+                console.log(jsonStore.queue);
+                
+            }
+            // showQueue();
+
+
+            async function showCalendar() {
+                const jsonStore = await fetch(baseURL+calendarID)
+                    .then(function(response) {
+                        return response.json();
+                });
+
+                console.log(jsonStore.calendar);
+
+            }
+            // showCalendar();
+
+
+            async function removeFromCalendar(type,day,name){
+                // type = "meal" or "event"
+                // const jsonStore = await fetch(baseURL+'calendar/'+day+'/'+type+'s')
+                const jsonStore = await fetch(baseURL+calendarID)
+                    .then(function(response) {
+                        return response.json();
+                });
+                calendarHash = jsonStore.calendar;
+                console.log(calendarHash);
+
+                console.log(calendarHash[day][type+'s']);
+                
+                itemIndex = calendarHash[day][type+'s'].indexOf(name);
+                calendarHash[day][type+'s'].splice(itemIndex,1);
+                console.log(calendarHash);
+                
+                // fetch(baseURL+calendarID, {
+                //   headers: {
+                //     'Content-type': 'application/json'
+                //   },
+                //   method: 'PUT',
+                //   body: JSON.stringify({"calendar":calendarHash}),
+                // }).then(function(response){
+                //     loaded();
+                // });
+            }
+            removeFromCalendar("meal","Saturday","test2");
+
+
+            
+            
+        }); //ready
+    </script>
+
+</head>
+
+<body>
+
+
+</body>
+
+</html>
