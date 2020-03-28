@@ -1,0 +1,54 @@
+INITIALIZATION
+
+get new sandbox, set baseURL, i.e. box_01ab51182a68189839b6
+
+****QUEUE****
+
+curl -X POST 'https://jsonbox.io/box_01ab51182a68189839b6' \
+    -H 'content-type: application/json' \
+    -d '{"queue":[""]}'
+
+visit https://jsonbox.io/box_01ab51182a68189839b6 to retrieve queueID, i.e. 5e7d568ec0c3bf0017b544ae
+
+POPULATE QUEUE
+curl -X PUT 'https://jsonbox.io/box_01ab51182a68189839b6/5e7d568ec0c3bf0017b544ae' \
+    -H 'content-type: application/json' \
+    -d '{"queue":["","rice and beans"]}'
+
+CLEAR QUEUE
+curl -X PUT 'https://jsonbox.io/box_01ab51182a68189839b6/5e7d568ec0c3bf0017b544ae' \
+    -H 'content-type: application/json' \
+    -d '{"queue":[""]}'
+
+DELETE, if needed
+curl -X DELETE 'https://jsonbox.io/box_01ab51182a68189839b6/5e7d5660c0c3bf0017b544ad'
+
+****CALENDAR****
+
+curl -X POST 'https://jsonbox.io/box_01ab51182a68189839b6/' \
+    -H 'content-type: application/json' \
+    -d '{"calendar":[{"Saturday":{"meals":[""],"events":[""]},"Sunday":{"meals":[""],"events":[""]},"Monday":{"meals":[""],"events":[""]},"Tuesday":{"meals":[""],"events":[""]},"Wednesday":{"meals":[""],"events":[""]},"Thursday":{"meals":[""],"events":[""]},"Friday":{"meals":[""],"events":[""]}}]}'
+
+visit https://jsonbox.io/box_01ab51182a68189839b6 to retrieve calendarID, i.e. 5e7f1afdf110e400171b8968
+
+POPULATE CALENDAR
+curl -X PUT 'https://jsonbox.io/box_01ab51182a68189839b6/5e7f1afdf110e400171b8968' \
+    -H 'content-type: application/json' \
+    -d '{"calendar":{"Saturday":{"meals":["","rice and beans"],"events":["","saturday snuggling"]},"Sunday":{"meals":["","LOs","bread"],"events":["","church","date night"]},"Monday":{"meals":[""],"events":[""]},"Tuesday":{"meals":[""],"events":[""]},"Wednesday":{"meals":[""],"events":[""]},"Thursday":{"meals":[""],"events":[""]},"Friday":{"meals":[""],"events":[""]}}}'
+
+CLEAR CALENDAR
+curl -X PUT 'https://jsonbox.io/box_01ab51182a68189839b6/5e7f1afdf110e400171b8968' \
+    -H 'content-type: application/json' \
+    -d '{"calendar":{"Saturday":{"meals":["","rice and beans"],"events":["","saturday snuggling"]},"Sunday":{"meals":["","LOs","bread"],"events":["","church","date night"]},"Monday":{"meals":[""],"events":[""]},"Tuesday":{"meals":[""],"events":[""]},"Wednesday":{"meals":[""],"events":[""]},"Thursday":{"meals":[""],"events":[""]},"Friday":{"meals":[""],"events":[""]}}}'
+
+
+
+
+
+
+
+
+
+
+
+
