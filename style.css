@@ -1,0 +1,241 @@
+html,
+body {
+  width: 100%;
+  height: 100%;
+}
+
+#loading {
+  background-color: rgba(100, 100, 100, 0.5);
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 3;
+}
+
+#loading img {
+  background-color: rgba;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100px;
+  height: 100px;
+  margin-top: -50px; /* Half the height */
+  margin-left: -50px; /* Half the width */
+  z-index: 4;
+}
+
+h1 {
+  margin: 10px 0;
+  font-family: "Oswald", sans-serif;
+  font-weight: 700;
+  font-size: 60px;
+}
+
+ul {
+  margin-bottom: 0;
+}
+
+.box {
+  border: 2px solid black;
+  margin-bottom: 10px;
+  margin: 0 5px 10px;
+  padding: 10px 0;
+}
+
+#queue {
+  padding: 0 10px 10px;
+}
+
+#calendar {
+  padding: 0 0 10px;
+}
+
+#queueHeading {
+  color: #3f89c1; /*blue*/
+  font-weight: 800;
+  font-family: "Oswald", sans-serif;
+}
+
+#calendarHeading {
+  color: #ff2a1d; /*red*/
+  font-weight: 800;
+  font-family: "Oswald", sans-serif;
+}
+
+.text-muted {
+  font-weight: 200;
+}
+
+.box ul {
+  padding: 2px;
+}
+
+.box li {
+  list-style: none;
+  padding: 8px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  background-color: #ddd;
+  font-weight: 600;
+}
+
+.schedule,
+.reschedule {
+  height: 20px;
+  position: relative;
+  top: -3px;
+}
+
+#scheduler {
+  position: fixed;
+  display: none;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.8);
+  z-index: 2;
+  cursor: pointer;
+}
+
+.schedulerText {
+  width: 100%;
+  height: 100%;
+  color: white;
+}
+
+.schedulerText h1 {
+  text-align: center;
+  font-size: 30px;
+}
+
+.schedulerDay {
+  width: 300px;
+  background-color: lightgray;
+  color: black;
+  margin: 10px auto;
+  padding: 15px;
+  font-size: 20px;
+  text-align: center;
+}
+
+.deleteQueueItem,
+.deleteCalendarMeal,
+.deleteCalendarEvent,
+.queueCalendarMeal {
+  height: 20px;
+  position: relative;
+  top: -3px;
+}
+
+.plus-icon {
+  height: 20px;
+  position: relative;
+  left: 2px;
+  margin-top: 5px;
+}
+
+tbody th {
+  font-size: 2em;
+  display: block;
+  /*word-break: break-all;*/
+  font-family: monospace;
+  width: 3ch;
+  overflow: hidden;
+  white-space: nowrap;
+  width: 58px;
+}
+
+.card-title {
+  margin-bottom: 0;
+}
+
+p.card-title {
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.card-body {
+  padding: 10px;
+  background-color: whitesmoke;
+}
+
+.card-img-top {
+  border-top-left-radius: 0px;
+  border-top-right-radius: 0px;
+  border-bottom-left-radius: calc(0.25rem - 1px);
+  border-bottom-right-radius: calc(0.25rem - 1px);
+}
+
+h1 .icon {
+  height: 1em;
+  position: relative;
+  top: -5px;
+  margin: 0 5px;
+}
+
+.col-6 {
+  padding: 0 5px 10px;
+}
+
+.link-icon {
+  height: 1.5em;
+}
+
+.catalogPlus {
+  position: absolute;
+  bottom: 20px;
+  right: 10px;
+  height: 60px;
+}
+
+.overlay {
+  position: fixed;
+  /*display: none; // causes problem with fittext */
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.8);
+  z-index: 2;
+  cursor: pointer;
+}
+
+.overlayText {
+  width: 100%;
+  height: 100%;
+  color: white;
+}
+
+.overlayText h1 {
+  text-align: center;
+  font-size: 30px;
+}
+
+#shuffle {
+}
+
+#shuffle.stick {
+  margin-top: 0;
+  position: fixed;
+  bottom: 5px;
+  right: 10px;
+  z-index: 9999;
+}
+
+#shuffle-btn {
+  margin-bottom: 15px;
+}
+
+#shuffle-btn .icon {
+  height: 2em;
+  position: relative;
+  top: -2px;
+  width: 40px;
+}
