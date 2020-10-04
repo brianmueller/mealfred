@@ -41,11 +41,24 @@ curl -X PUT 'https://jsonbox.io/box_01ab51182a68189839b6/5e7f1afdf110e400171b896
     -H 'content-type: application/json' \
     -d '{"calendar":{"Saturday":{"meals":["","rice and beans"],"events":["","saturday snuggling"]},"Sunday":{"meals":["","LOs","bread"],"events":["","church","date night"]},"Monday":{"meals":[""],"events":[""]},"Tuesday":{"meals":[""],"events":[""]},"Wednesday":{"meals":[""],"events":[""]},"Thursday":{"meals":[""],"events":[""]},"Friday":{"meals":[""],"events":[""]}}}'
 
+****CATALOG****
 
+curl -X POST 'https://jsonbox.io/box_01ab51182a68189839b6' \
+    -H 'content-type: application/json' \
+    -d '{"catalog":[""]}'
 
+visit https://jsonbox.io/box_01ab51182a68189839b6 to retrieve catalogID, i.e. 5f7912eb9bd9d90017027712
 
-
-
+CATALOG FORMAT:
+{
+    mealID: 0,
+    title: "meal name",
+    notes: "meal notes",
+    tags: "meal tags",
+    link: "meal link",
+    photoUrl: "meal photo url",
+    photoImg: "meal photo img"
+}
 
 
 

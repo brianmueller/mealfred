@@ -1,82 +1,133 @@
 <!DOCTYPE html>
 <html>
+  <head>
+    <meta charset="utf-8" />
 
-<head>
-    <meta charset="utf-8">
-    
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
     <script>
-        $(function() {
+      $(function () {
+        // let baseURL = "https://jsonbox.io/box_01ab51182a68189839b6/";
+        // let queueID = "5e7d568ec0c3bf0017b544ae";
+        // let calendarID = "5e7f1afdf110e400171b8968";
 
-            let baseURL = "https://jsonbox.io/box_01ab51182a68189839b6/";
-            let queueID = "5e7d568ec0c3bf0017b544ae";
-            let calendarID = "5e7f1afdf110e400171b8968";
-            
-            async function showQueue() {
-                const jsonStore = await fetch(baseURL+queueID)
-                    .then(function(response) {
-                        // console.log(response.json());
-                        return response.json();
-                });
+        // async function showQueue() {
+        //     const jsonStore = await fetch(baseURL+queueID)
+        //         .then(function(response) {
+        //             // console.log(response.json());
+        //             return response.json();
+        //     });
 
-                console.log(jsonStore.queue);
-                
-            }
-            // showQueue();
+        //     console.log(jsonStore.queue);
 
+        // }
+        // // showQueue();
 
-            async function showCalendar() {
-                const jsonStore = await fetch(baseURL+calendarID)
-                    .then(function(response) {
-                        return response.json();
-                });
+        // async function showCalendar() {
+        //     const jsonStore = await fetch(baseURL+calendarID)
+        //         .then(function(response) {
+        //             return response.json();
+        //     });
 
-                console.log(jsonStore.calendar);
+        //     console.log(jsonStore.calendar);
 
-            }
-            // showCalendar();
+        // }
+        // // showCalendar();
 
+        // async function removeFromCalendar(type,day,name){
+        //     // type = "meal" or "event"
+        //     // const jsonStore = await fetch(baseURL+'calendar/'+day+'/'+type+'s')
+        //     const jsonStore = await fetch(baseURL+calendarID)
+        //         .then(function(response) {
+        //             return response.json();
+        //     });
+        //     calendarHash = jsonStore.calendar;
+        //     console.log(calendarHash);
 
-            async function removeFromCalendar(type,day,name){
-                // type = "meal" or "event"
-                // const jsonStore = await fetch(baseURL+'calendar/'+day+'/'+type+'s')
-                const jsonStore = await fetch(baseURL+calendarID)
-                    .then(function(response) {
-                        return response.json();
-                });
-                calendarHash = jsonStore.calendar;
-                console.log(calendarHash);
+        //     console.log(calendarHash[day][type+'s']);
 
-                console.log(calendarHash[day][type+'s']);
-                
-                itemIndex = calendarHash[day][type+'s'].indexOf(name);
-                calendarHash[day][type+'s'].splice(itemIndex,1);
-                console.log(calendarHash);
-                
-                // fetch(baseURL+calendarID, {
-                //   headers: {
-                //     'Content-type': 'application/json'
-                //   },
-                //   method: 'PUT',
-                //   body: JSON.stringify({"calendar":calendarHash}),
-                // }).then(function(response){
-                //     loaded();
-                // });
-            }
-            removeFromCalendar("meal","Saturday","test2");
+        //     itemIndex = calendarHash[day][type+'s'].indexOf(name);
+        //     calendarHash[day][type+'s'].splice(itemIndex,1);
+        //     console.log(calendarHash);
 
+        //     // fetch(baseURL+calendarID, {
+        //     //   headers: {
+        //     //     'Content-type': 'application/json'
+        //     //   },
+        //     //   method: 'PUT',
+        //     //   body: JSON.stringify({"calendar":calendarHash}),
+        //     // }).then(function(response){
+        //     //     loaded();
+        //     // });
+        // }
+        // removeFromCalendar("meal","Saturday","test2");
 
-            
-            
-        }); //ready
+        //let img = "https://photos.app.goo.gl/HAa5bsUX8HfjNBd18";
+
+        // var xhttp = new XMLHttpRequest();
+        // xhttp.onreadystatechange = function () {
+        //   if (this.readyState == 4 && this.status == 200) {
+        //     myFunction(this);
+        //   }
+        // };
+        // xhttp.open(
+        //   "GET",
+        //   "https://cors-anywhere.herokuapp.com/https://photos.app.goo.gl/HAa5bsUX8HfjNBd18",
+        //   true
+        // );
+        // xhttp.send();
+
+        // function myFunction(xml) {
+        //   var x, i, xmlDoc, txt;
+        //   xmlDoc = xml.responseXML;
+        //   txt = "";
+        //   //   let og = document.querySelectorAll('[property="og:image"]');
+        //   //   console.log(og);
+
+        //   //   x = xmlDoc.getElementsByTagName('book');
+        //   x = document.querySelectorAll('[property="og:image"]');
+        //   for (i = 0; i < x.length; i++) {
+        //     txt += x[i].getAttribute("category") + "<br>";
+        //   }
+        //   //   document.getElementById("demo").innerHTML = txt;
+        //   console.log(txt);
+        // }
+
+        // STATIC
+        let Glink = "https://photos.app.goo.gl/HAa5bsUX8HfjNBd18";
+        $.ajax({
+          url:
+            "https://cors-anywhere.herokuapp.com/https://bytenbit.com/app/host.php",
+          type: "POST",
+          dataType: "json",
+          data: {
+            Glink: Glink,
+          },
+          success: function (result) {
+            console.log(result.link + "=h400-w400-c");
+          },
+        });
+
+        // FUNCTION
+        function getPhotoImg(url) {
+          $.ajax({
+            url:
+              "https://cors-anywhere.herokuapp.com/https://bytenbit.com/app/host.php",
+            type: "POST",
+            dataType: "json",
+            data: {
+              Glink: url,
+            },
+            success: function (result) {
+              console.log(result.link + "=h400-w400-c");
+            },
+          });
+        }
+
+        getPhotoImg("https://photos.app.goo.gl/HAa5bsUX8HfjNBd18");
+      }); //ready
     </script>
+  </head>
 
-</head>
-
-<body>
-
-
-</body>
-
+  <body></body>
 </html>
