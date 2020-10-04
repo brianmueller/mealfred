@@ -1,7 +1,20 @@
 $(function () {
-  let baseURL = "https://jsonbox.io/box_01ab51182a68189839b6/";
-  let queueID = "5e7d568ec0c3bf0017b544ae";
-  let calendarID = "5e7f1afdf110e400171b8968";
+  let urlParams = new URLSearchParams(window.location.search);
+  function getUrlParameter(name) {
+    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)");
+    var results = regex.exec(location.search);
+    return results === null
+      ? ""
+      : decodeURIComponent(results[1].replace(/\+/g, " "));
+  }
+
+  let baseURL = getUrlParameter("baseURL");
+  baseURL = "https://jsonbox.io/" + baseURL + "/";
+  let queueID = getUrlParameter("queueID");
+  let calendarID = getUrlParameter("calendarID");
+  let catalogID = getUrlParameter("catalogID");
+  console.log(catalogID);
 
   function loading() {
     document.querySelector("#loading").style.display = "block";
@@ -553,31 +566,31 @@ $(function () {
     recipes.forEach(function (recipe, index) {
       var toAdd = "";
       toAdd += `
-                <div class="col-6 col-md-3">
-                    <div class="card">
-                        <div class="card-body">
-                            <p class="card-title"><span>${recipe.Title}</span>
-                `;
+                  <div class="col-6 col-md-3">
+                      <div class="card">
+                          <div class="card-body">
+                              <p class="card-title"><span>${recipe.Title}</span>
+                  `;
       if (recipe.Link != "") {
         toAdd += `
-                        <a href=${recipe.Link} target="_blank"><img src="link-icon.png" class="link-icon"></a>
-                    `;
+                          <a href=${recipe.Link} target="_blank"><img src="link-icon.png" class="link-icon"></a>
+                      `;
       }
       toAdd += `
-                            </p>
-                        </div>
-                        <img src=${recipe.Jpgsq} class="card-img-top recipeImg" id="recipe${index}">
-                    </div>
-                    <img src="plus-icon.png" class="catalogPlus">
-                  </div>`;
+                              </p>
+                          </div>
+                          <img src=${recipe.Jpgsq} class="card-img-top recipeImg" id="recipe${index}">
+                      </div>
+                      <img src="plus-icon.png" class="catalogPlus">
+                    </div>`;
       toAdd += `
-                    <div id="recipe${index}notes" class="overlay">
-                        <div class="overlayText">
-                            <h1>${recipe.Title}</h1>
-                            <p>${recipe.Notes}</p>
-                        </div>
-                    </div>
-                `;
+                      <div id="recipe${index}notes" class="overlay">
+                          <div class="overlayText">
+                              <h1>${recipe.Title}</h1>
+                              <p>${recipe.Notes}</p>
+                          </div>
+                      </div>
+                  `;
       all.innerHTML += toAdd;
       $(`#recipe${index}notes .overlayText`).css("font-size", index * 5 + 10);
     });
