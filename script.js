@@ -14,7 +14,6 @@ $(function () {
   let queueID = getUrlParameter("queueID");
   let calendarID = getUrlParameter("calendarID");
   let catalogID = getUrlParameter("catalogID");
-  console.log(catalogID);
 
   function loading() {
     document.querySelector("#loading").style.display = "block";
@@ -532,94 +531,78 @@ $(function () {
 
   var all = document.querySelector("#all");
 
-  var sheetUrl =
-    "https://spreadsheets.google.com/feeds/cells/1N8b0FL5uXfuHkYY-oJsjEBGEufzn8BGo_UAUPiXzRo4/1/public/full?alt=json";
+  var catalogHash = {};
 
-  var sheetKey = "1N8b0FL5uXfuHkYY-oJsjEBGEufzn8BGo_UAUPiXzRo4";
+  async function showCatalog() {
+    loading();
+    const jsonStore = await fetch(baseURL + catalogID).then(function (
+      response
+    ) {
+      loaded();
+      return response.json();
+    });
 
-  $.getJSON(sheetUrl, function (data) {
-    var entries = data.feed.entry;
-    var values = [];
-    var num = 0;
-    // console.log(entries)
-    for (var i = 0; i < data.feed.gs$rowCount.$t; i++) {
-      var row = [];
-      for (var j = 0; j < data.feed.gs$colCount.$t; j++) {
-        if (entries[num].gs$cell.col == j + 1) {
-          //lined up
-          row.push(entries[num].gs$cell.$t);
-          num++;
-        } else {
-          //cell was empty and didn't show up in json
-          row.push("");
-        }
-      }
-      values.push(row);
-    }
-    var recipes = values.slice(1).map((row) =>
-      row.reduce(function (acc, cur, i) {
-        acc[values[0][i]] = cur;
-        return acc;
-      }, {})
-    );
-
-    recipes.forEach(function (recipe, index) {
-      var toAdd = "";
-      toAdd += `
-                  <div class="col-6 col-md-3">
-                      <div class="card">
-                          <div class="card-body">
-                              <p class="card-title"><span>${recipe.Title}</span>
-                  `;
-      if (recipe.Link != "") {
+    if (jsonStore.catalog != null) {
+      catalogHash = jsonStore.catalog;
+      catalogHash.forEach(function (recipe, index) {
+        let toAdd = "";
         toAdd += `
-                          <a href=${recipe.Link} target="_blank"><img src="link-icon.png" class="link-icon"></a>
+                      <div class="col-6 col-md-3">
+                          <div class="card">
+                              <div class="card-body">
+                                  <p class="card-title"><span>${recipe.title}</span>
                       `;
-      }
-      toAdd += `
-                              </p>
+        if (recipe.link != "") {
+          toAdd += `
+                              <a href=${recipe.link} target="_blank"><img src="link-icon.png" class="link-icon"></a>
+                          `;
+        }
+        toAdd += `
+                                  </p>
+                              </div>
+                              <img src=${recipe.photoImg} class="card-img-top recipeImg" id="recipe${index}">
                           </div>
-                          <img src=${recipe.Jpgsq} class="card-img-top recipeImg" id="recipe${index}">
-                      </div>
-                      <img src="plus-icon.png" class="catalogPlus">
-                    </div>`;
-      toAdd += `
-                      <div id="recipe${index}notes" class="overlay">
-                          <div class="overlayText">
-                              <h1>${recipe.Title}</h1>
-                              <p>${recipe.Notes}</p>
+                          <img src="plus-icon.png" class="catalogPlus">
+                        </div>`;
+        toAdd += `
+                          <div id="recipe${index}notes" class="overlay">
+                              <div class="overlayText">
+                                  <h1>${recipe.title}</h1>
+                                  <p>${recipe.notes}</p>
+                              </div>
                           </div>
-                      </div>
-                  `;
-      all.innerHTML += toAdd;
-      $(`#recipe${index}notes .overlayText`).css("font-size", index * 5 + 10);
-    });
+                      `;
+        all.innerHTML += toAdd;
+        $(`#recipe${index}notes .overlayText`).css("font-size", index * 5 + 10);
+      });
 
-    // show note
-    $(".recipeImg").click(function () {
-      var newId = "#" + $(this).attr("id") + "notes";
-      $(newId).css("display", "block");
-    });
+      // show note
+      $(".recipeImg").click(function () {
+        var newId = "#" + $(this).attr("id") + "notes";
+        $(newId).css("display", "block");
+      });
 
-    // hide note
-    $(".overlay").click(function () {
-      $(this).css("display", "none");
-    });
+      // hide note
+      $(".overlay").click(function () {
+        $(this).css("display", "none");
+      });
 
-    textFit(document.getElementsByClassName("overlayText"), {
-      multiLine: true,
-    });
-    $(".overlay").css("display", "none");
+      textFit(document.getElementsByClassName("overlayText"), {
+        multiLine: true,
+      });
+      $(".overlay").css("display", "none");
 
-    $("#shuffle-btn").click(function () {
-      var all = document.querySelector("#all");
-      for (var i = all.children.length; i >= 0; i--) {
-        all.appendChild(all.children[(Math.random() * i) | 0]);
-      }
-    });
+      $("#shuffle-btn").click(function () {
+        var all = document.querySelector("#all");
+        for (var i = all.children.length; i >= 0; i--) {
+          all.appendChild(all.children[(Math.random() * i) | 0]);
+        }
+      });
 
-    catalogListenForPlus();
-  }); //getJSON
+      catalogListenForPlus();
+    }
+  }
+  showCatalog();
 
   /******************* END CATALOG *******************/
 
