@@ -51,13 +51,13 @@ visit https://jsonbox.io/box_01ab51182a68189839b6 to retrieve catalogID, i.e. 5f
 
 CATALOG FORMAT:
 {
-    mealID: 0,
-    title: "meal name",
-    notes: "meal notes",
-    tags: "meal tags",
-    link: "meal link",
-    photoUrl: "meal photo url",
-    photoImg: "meal photo img"
+    recipeID: 0,
+    title: "recipe name",
+    notes: "recipe notes",
+    tags: "recipe tags",
+    link: "recipe link",
+    photoUrl: "recipe photo url",
+    photoImg: "recipe photo img"
 }
 
 
