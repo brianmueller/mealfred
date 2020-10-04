@@ -51,7 +51,6 @@ visit https://jsonbox.io/box_01ab51182a68189839b6 to retrieve catalogID, i.e. 5f
 
 CATALOG FORMAT:
 {
-    "recipeID": 1,
     "photoUrl": "recipe photo url",
     "photoImg": "recipe photo img",
     "title": "recipe name",
@@ -63,7 +62,7 @@ CATALOG FORMAT:
 POPULATE CATALOG:
 curl -X PUT 'https://jsonbox.io/box_01ab51182a68189839b6/5f7912eb9bd9d90017027712' \
     -H 'content-type: application/json' \
-    -d '{"catalog":[{"recipeID": 1,"photoUrl": "https://photos.app.goo.gl/HAa5bsUX8HfjNBd18","photoImg": "https://lh3.googleusercontent.com/wPHTBZOlK5fGdBLQU_u11neCi-HwLElR768OjbSpO9SNIxZyJz8802TLQJ14dYbsq1GUtKO67coQouobdw4NGNAq3QYMtpkzL-HCEgJTOXSbLilhxIu3qljMFcI0EQ73RJQI3DJA-f0=h400-w400-c","title": "IP Mac and Cheese","notes": "2c cheese, no mozzarella","tags": "IP,side,pasta,main","link": "https://thesaltymarshmallow.com/instant-pot-mac-and-cheese/"},{"recipeID": 2,"photoUrl": "https://photos.app.goo.gl/bZLNoEoLwqjvW8mv9","photoImg": "https://lh3.googleusercontent.com/PWiaDlhREG1ivm-HF9rMAcq5wYmU_cqC8dUSpdjfqXNEDW3l9JNOr12l3Z1dXWkG-SKwVSZvp5odf60GNcnESgt8SMHWIFZhbMJ3iJg4QVDCAz2dNqPJebTNSJoryZ2_K99uO8ICHXA=h400-w400-c","title": "IP Ham & Lentil Soup","notes": "Sauté onion, garlic, carrots, celery. Add thyme, pepper, paprika. Add 4c broth. Add cubes ham, ham bone, 1 bag lentils. 15+15. Add spinach, stir. Add Parmesan cheese, optional.","tags": "IP,soup,main,one-pot","link": "https://www.wellplated.com/instant-pot-lentil-soup/"}]}'
+    -d '{"catalog":[{"photoUrl": "https://photos.app.goo.gl/HAa5bsUX8HfjNBd18","photoImg": "https://lh3.googleusercontent.com/wPHTBZOlK5fGdBLQU_u11neCi-HwLElR768OjbSpO9SNIxZyJz8802TLQJ14dYbsq1GUtKO67coQouobdw4NGNAq3QYMtpkzL-HCEgJTOXSbLilhxIu3qljMFcI0EQ73RJQI3DJA-f0=h400-w400-c","title": "IP Mac and Cheese","notes": "2c cheese, no mozzarella","tags": "IP,side,pasta,main","link": "https://thesaltymarshmallow.com/instant-pot-mac-and-cheese/"},{"photoUrl": "https://photos.app.goo.gl/bZLNoEoLwqjvW8mv9","photoImg": "https://lh3.googleusercontent.com/PWiaDlhREG1ivm-HF9rMAcq5wYmU_cqC8dUSpdjfqXNEDW3l9JNOr12l3Z1dXWkG-SKwVSZvp5odf60GNcnESgt8SMHWIFZhbMJ3iJg4QVDCAz2dNqPJebTNSJoryZ2_K99uO8ICHXA=h400-w400-c","title": "IP Ham & Lentil Soup","notes": "Sauté onion, garlic, carrots, celery. Add thyme, pepper, paprika. Add 4c broth. Add cubes ham, ham bone, 1 bag lentils. 15+15. Add spinach, stir. Add Parmesan cheese, optional.","tags": "IP,soup,main,one-pot","link": "https://www.wellplated.com/instant-pot-lentil-soup/"}]}'
 
 CLEAR CATALOG:
 curl -X PUT 'https://jsonbox.io/box_01ab51182a68189839b6/5f7912eb9bd9d90017027712' \

@@ -529,7 +529,7 @@ $(function () {
 
   /******************* CATALOG *******************/
 
-  var all = document.querySelector("#all");
+  var catalog = document.querySelector("#catalog");
 
   var catalogHash = {};
 
@@ -572,7 +572,7 @@ $(function () {
                               </div>
                           </div>
                       `;
-        all.innerHTML += toAdd;
+        catalog.innerHTML += toAdd;
         $(`#recipe${index}notes .overlayText`).css("font-size", index * 5 + 10);
       });
 
@@ -593,9 +593,9 @@ $(function () {
       $(".overlay").css("display", "none");
 
       $("#shuffle-btn").click(function () {
-        var all = document.querySelector("#all");
-        for (var i = all.children.length; i >= 0; i--) {
-          all.appendChild(all.children[(Math.random() * i) | 0]);
+        var catalog = document.querySelector("#catalog");
+        for (var i = catalog.children.length; i >= 0; i--) {
+          catalog.appendChild(catalog.children[(Math.random() * i) | 0]);
         }
       });
 
@@ -623,13 +623,13 @@ $(function () {
   // shuffle
   function sticktothebottom() {
     var window_top = $(window).scrollTop();
-    var top = $("#all").offset().top - window.innerHeight;
+    var top = $("#catalog").offset().top - window.innerHeight;
     if (window_top > top) {
       $("#shuffle").addClass("stick");
-      $("#all").height($("#stickThis").outerHeight());
+      $("#catalog").height($("#stickThis").outerHeight());
     } else {
       $("#shuffle").removeClass("stick");
-      $("#all").height(0);
+      $("#catalog").height(0);
     }
   }
   $(window).scroll(sticktothebottom);
