@@ -56,7 +56,7 @@ CATALOG FORMAT:
     "title": "recipe name",
     "notes": "recipe notes",
     "tags": "recipe tags",
-    "link": "recipe link",
+    "link": "recipe link"
 }
 
 POPULATE CATALOG:
