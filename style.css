@@ -239,3 +239,34 @@ h1 .icon {
   top: -2px;
   width: 40px;
 }
+
+#newRecipe {
+  margin-bottom: 10px;
+}
+
+#newRecipe .row {
+  padding: 10px;
+}
+
+#newRecipe > div {
+  padding: 5px;
+}
+
+#newRecipeGetPhotoSrc {
+  color:white;
+  background-color:red; 
+  border-radius:5px;
+  padding: 2px;
+}
+
+#addRecipe {
+  margin: 10px 0;
+}
+
+#addRecipe p{ 
+  background-color: lightgray;
+  border-radius:10px;
+  display: inline;
+  font-weight:700;
+  padding: 10px 20px;
+}

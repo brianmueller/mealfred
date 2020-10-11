@@ -527,6 +527,8 @@ $(function () {
 
   /******************* END CALENDAR *******************/
 
+  
+
   /******************* CATALOG *******************/
 
   var catalog = document.querySelector("#catalog");
