@@ -554,21 +554,22 @@ $(function () {
     });
   }
 
+  let newRecipeTitle, newRecipeNotes, newRecipeTags, newRecipeLink, newRecipePhotoUrl, newRecipePhotoImg;
   document.querySelector("#addRecipe").addEventListener("click",function(){
-    let newRecipeTitle = document.querySelector("#newRecipeTitle").value;
-    let newRecipeNotes = document.querySelector("#newRecipeNotes").value;
-    let newRecipeTags = document.querySelector("#newRecipeTags").value;
-    let newRecipeLink = document.querySelector("#newRecipeLink").value;
-    let newRecipePhotoUrl = document.querySelector("#newRecipePhotoUrl").value;
-    let newRecipePhotoImg = document.querySelector("#newRecipePhotoImg").value;
+    newRecipeTitle = document.querySelector("#newRecipeTitle");
+    newRecipeNotes = document.querySelector("#newRecipeNotes");
+    newRecipeTags = document.querySelector("#newRecipeTags");
+    newRecipeLink = document.querySelector("#newRecipeLink");
+    newRecipePhotoUrl = document.querySelector("#newRecipePhotoUrl");
+    newRecipePhotoImg = document.querySelector("#newRecipePhotoImg");
 
     let newRecipe = {
-      "photoUrl":newRecipePhotoUrl,
-      "photoImg":newRecipePhotoImg,
-      "title":newRecipeTitle,
-      "notes":newRecipeNotes,
-      "tags":newRecipeTags,
-      "link":newRecipeLink
+      "photoUrl":newRecipePhotoUrl.value,
+      "photoImg":newRecipePhotoImg.value,
+      "title":newRecipeTitle.value,
+      "notes":newRecipeNotes.value,
+      "tags":newRecipeTags.value,
+      "link":newRecipeLink.value
   }
     addRecipe(newRecipe);
   });
@@ -594,6 +595,12 @@ $(function () {
       body: JSON.stringify({ catalog: catalogHash }),
     }).then(function (response) {
       loaded();
+      newRecipeTitle.value = "";
+      newRecipeNotes.value = "";
+      newRecipeTags.value = "";
+      newRecipeLink.value = "";
+      newRecipePhotoUrl.value = "";
+      newRecipePhotoImg.value = "";
     });
 
     let index = catalogHash.length-1;
@@ -675,7 +682,7 @@ $(function () {
 
     if (jsonStore.catalog != null) {
       catalogHash = jsonStore.catalog;
-      console.log(catalogHash);
+      // console.log(catalogHash);
       catalogHash.forEach(function (recipe, index) {
         let toAdd = "";
         toAdd += `
