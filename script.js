@@ -527,7 +527,36 @@ $(function () {
 
   /******************* END CALENDAR *******************/
 
-  
+  /******************* NEW RECIPE *******************/
+
+  document
+    .querySelector("#newRecipePhotoGenerate")
+    .addEventListener("click", function () {
+      let newRecipePhotoUrl = document.querySelector("#newRecipePhotoUrl").value;
+      getPhotoImg(newRecipePhotoUrl);
+    });
+
+  function getPhotoImg(url) {
+    loading();
+    $.ajax({
+      url:
+        "https://cors-anywhere.herokuapp.com/https://bytenbit.com/app/host.php",
+      type: "POST",
+      dataType: "json",
+      data: {
+        Glink: url,
+      },
+      success: function (result) {
+        document.querySelector("#newRecipePhotoImg").value = result.link + "=h400-w400-c";
+        loaded();
+        // console.log(result.link + "=h400-w400-c");
+      },
+    });
+  }
+
+  // getPhotoSrc("https://photos.app.goo.gl/HAa5bsUX8HfjNBd18");
+
+  /******************* END NEW RECIPE *******************/
 
   /******************* CATALOG *******************/
 
