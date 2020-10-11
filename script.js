@@ -554,6 +554,106 @@ $(function () {
     });
   }
 
+  document.querySelector("#addRecipe").addEventListener("click",function(){
+    let newRecipeTitle = document.querySelector("#newRecipeTitle").value;
+    let newRecipeNotes = document.querySelector("#newRecipeNotes").value;
+    let newRecipeTags = document.querySelector("#newRecipeTags").value;
+    let newRecipeLink = document.querySelector("#newRecipeLink").value;
+    let newRecipePhotoUrl = document.querySelector("#newRecipePhotoUrl").value;
+    let newRecipePhotoImg = document.querySelector("#newRecipePhotoImg").value;
+
+    let newRecipe = {
+      "photoUrl":newRecipePhotoUrl,
+      "photoImg":newRecipePhotoImg,
+      "title":newRecipeTitle,
+      "notes":newRecipeNotes,
+      "tags":newRecipeTags,
+      "link":newRecipeLink
+  }
+    addRecipe(newRecipe);
+  });
+
+  var catalogHash = {};
+
+  async function addRecipe(recipe) {
+    loading();
+    const jsonStore = await fetch(baseURL + catalogID).then(function (
+      response
+    ) {
+      loaded();
+      return response.json();
+    });
+
+    catalogHash = jsonStore.catalog;
+    catalogHash.push(recipe);
+    fetch(baseURL + catalogID, {
+      headers: {
+        "Content-type": "application/json",
+      },
+      method: "PUT",
+      body: JSON.stringify({ catalog: catalogHash }),
+    }).then(function (response) {
+      loaded();
+    });
+
+    let index = catalogHash.length-1;
+    
+    let toAdd = "";
+    toAdd += `
+                  <div class="col-6 col-md-3">
+                      <div class="card">
+                          <div class="card-body">
+                              <p class="card-title"><span>${recipe.title}</span>
+                  `;
+    if (recipe.link != "") {
+      toAdd += `
+                          <a href=${recipe.link} target="_blank"><img src="link-icon.png" class="link-icon"></a>
+                      `;
+    }
+    toAdd += `
+                              </p>
+                          </div>
+                          <img src=${recipe.photoImg} class="card-img-top recipeImg" id="recipe${index}">
+                      </div>
+                      <img src="plus-icon.png" class="catalogPlus">
+                    </div>`;
+    toAdd += `
+                      <div id="recipe${index}notes" class="overlay">
+                          <div class="overlayText">
+                              <h1>${recipe.title}</h1>
+                              <p>${recipe.notes}</p>
+                          </div>
+                      </div>
+                  `;
+    catalog.innerHTML += toAdd;
+    $(`#recipe${index}notes .overlayText`).css("font-size", index * 5 + 10);
+
+    // show note
+    $(".recipeImg").click(function () {
+      var newId = "#" + $(this).attr("id") + "notes";
+      $(newId).css("display", "block");
+    });
+
+    // hide note
+    $(".overlay").click(function () {
+      $(this).css("display", "none");
+    });
+
+    textFit(document.getElementsByClassName("overlayText"), {
+      multiLine: true,
+    });
+    $(".overlay").css("display", "none");
+
+    $("#shuffle-btn").click(function () {
+      var catalog = document.querySelector("#catalog");
+      for (var i = catalog.children.length; i >= 0; i--) {
+        catalog.appendChild(catalog.children[(Math.random() * i) | 0]);
+      }
+    });
+
+    catalogListenForPlus();
+  }
+
   // getPhotoSrc("https://photos.app.goo.gl/HAa5bsUX8HfjNBd18");
 
   /******************* END NEW RECIPE *******************/
@@ -575,6 +675,7 @@ $(function () {
 
     if (jsonStore.catalog != null) {
       catalogHash = jsonStore.catalog;
+      console.log(catalogHash);
       catalogHash.forEach(function (recipe, index) {
         let toAdd = "";
         toAdd += `
