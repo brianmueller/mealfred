@@ -252,6 +252,11 @@ h1 .icon {
   padding: 5px;
 }
 
+#newRecipe input {
+  margin-bottom: 15px;
+  width: 100%
+}
+
 #newRecipePhotoGenerate {
   color:white;
   background-color:red; 
@@ -260,7 +265,7 @@ h1 .icon {
 }
 
 #addRecipe {
-  margin: 10px 0;
+  margin: 20px 0 10px;
 }
 
 #addRecipe p{ 
