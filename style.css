@@ -259,17 +259,27 @@ h1 .icon {
 
 #newRecipePhotoGenerate {
   color:white;
-  background-color:red; 
+  background-color:blue; 
   border-radius:5px;
   padding: 2px;
 }
 
-#addRecipe {
+#addRecipe, #clearNewRecipe {
   margin: 20px 0 10px;
 }
 
 #addRecipe p{ 
-  background-color: lightgray;
+  color:white;
+  background-color: green;
+  border-radius:10px;
+  display: inline;
+  font-weight:700;
+  padding: 10px 20px;
+}
+
+#clearNewRecipe p{
+  color:white;
+  background-color: red;
   border-radius:10px;
   display: inline;
   font-weight:700;

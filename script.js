@@ -554,14 +554,20 @@ $(function () {
     });
   }
 
-  let newRecipeTitle, newRecipeNotes, newRecipeTags, newRecipeLink, newRecipePhotoUrl, newRecipePhotoImg;
+  let newRecipeTitle = document.querySelector("#newRecipeTitle");
+  let newRecipeNotes = document.querySelector("#newRecipeNotes");
+  let newRecipeTags = document.querySelector("#newRecipeTags");
+  let newRecipeLink = document.querySelector("#newRecipeLink");
+  let newRecipePhotoUrl = document.querySelector("#newRecipePhotoUrl");
+  let newRecipePhotoImg = document.querySelector("#newRecipePhotoImg");
+
   document.querySelector("#addRecipe").addEventListener("click",function(){
-    newRecipeTitle = document.querySelector("#newRecipeTitle");
-    newRecipeNotes = document.querySelector("#newRecipeNotes");
-    newRecipeTags = document.querySelector("#newRecipeTags");
-    newRecipeLink = document.querySelector("#newRecipeLink");
-    newRecipePhotoUrl = document.querySelector("#newRecipePhotoUrl");
-    newRecipePhotoImg = document.querySelector("#newRecipePhotoImg");
+    // newRecipeTitle = document.querySelector("#newRecipeTitle");
+    // newRecipeNotes = document.querySelector("#newRecipeNotes");
+    // newRecipeTags = document.querySelector("#newRecipeTags");
+    // newRecipeLink = document.querySelector("#newRecipeLink");
+    // newRecipePhotoUrl = document.querySelector("#newRecipePhotoUrl");
+    // newRecipePhotoImg = document.querySelector("#newRecipePhotoImg");
 
     let newRecipe = {
       "photoUrl":newRecipePhotoUrl.value,
@@ -570,7 +576,7 @@ $(function () {
       "notes":newRecipeNotes.value,
       "tags":newRecipeTags.value,
       "link":newRecipeLink.value
-  }
+    }
     addRecipe(newRecipe);
   });
 
@@ -587,6 +593,7 @@ $(function () {
 
     catalogHash = jsonStore.catalog;
     catalogHash.push(recipe);
+    console.log(catalogHash);
     fetch(baseURL + catalogID, {
       headers: {
         "Content-type": "application/json",
@@ -595,70 +602,20 @@ $(function () {
       body: JSON.stringify({ catalog: catalogHash }),
     }).then(function (response) {
       loaded();
-      newRecipeTitle.value = "";
-      newRecipeNotes.value = "";
-      newRecipeTags.value = "";
-      newRecipeLink.value = "";
-      newRecipePhotoUrl.value = "";
-      newRecipePhotoImg.value = "";
     });
+  }
 
-    let index = catalogHash.length-1;
-    
-    let toAdd = "";
-    toAdd += `
-                  <div class="col-6 col-md-3">
-                      <div class="card">
-                          <div class="card-body">
-                              <p class="card-title"><span>${recipe.title}</span>
-                  `;
-    if (recipe.link != "") {
-      toAdd += `
-                          <a href=${recipe.link} target="_blank"><img src="link-icon.png" class="link-icon"></a>
-                      `;
-    }
-    toAdd += `
-                              </p>
-                          </div>
-                          <img src=${recipe.photoImg} class="card-img-top recipeImg" id="recipe${index}">
-                      </div>
-                      <img src="plus-icon.png" class="catalogPlus">
-                    </div>`;
-    toAdd += `
-                      <div id="recipe${index}notes" class="overlay">
-                          <div class="overlayText">
-                              <h1>${recipe.title}</h1>
-                              <p>${recipe.notes}</p>
-                          </div>
-                      </div>
-                  `;
-    catalog.innerHTML += toAdd;
-    $(`#recipe${index}notes .overlayText`).css("font-size", index * 5 + 10);
+  document.querySelector("#clearNewRecipe").addEventListener("click",function(){
+    clearNewRecipe();
+  });
 
-    // show note
-    $(".recipeImg").click(function () {
-      var newId = "#" + $(this).attr("id") + "notes";
-      $(newId).css("display", "block");
-    });
-
-    // hide note
-    $(".overlay").click(function () {
-      $(this).css("display", "none");
-    });
-
-    textFit(document.getElementsByClassName("overlayText"), {
-      multiLine: true,
-    });
-    $(".overlay").css("display", "none");
-
-    $("#shuffle-btn").click(function () {
-      var catalog = document.querySelector("#catalog");
-      for (var i = catalog.children.length; i >= 0; i--) {
-        catalog.appendChild(catalog.children[(Math.random() * i) | 0]);
-      }
-    });
-
-    catalogListenForPlus();
+  function clearNewRecipe(){
+    newRecipeTitle.value = "";
+    newRecipeNotes.value = "";
+    newRecipeTags.value = "";
+    newRecipeLink.value = "";
+    newRecipePhotoUrl.value = "";
+    newRecipePhotoImg.value = "";
   }
 
   // getPhotoSrc("https://photos.app.goo.gl/HAa5bsUX8HfjNBd18");
@@ -670,6 +627,29 @@ $(function () {
   var catalog = document.querySelector("#catalog");
 
   var catalogHash = {};
+  
+  async function refreshCatalog() {
+    loading();
+    const jsonStore = await fetch(baseURL + catalogID).then(function (
+      response
+    ) {
+      loaded();
+      return response.json();
+    });
+
+    catalogHash = jsonStore.catalog;
+    console.log(catalogHash);
+    fetch(baseURL + catalogID, {
+      headers: {
+        "Content-type": "application/json",
+      },
+      method: "PUT",
+      body: JSON.stringify({ catalog: catalogHash }),
+    }).then(function (response) {
+      loaded();
+    });
+  }
+  refreshCatalog();
 
   async function showCatalog() {
     loading();
