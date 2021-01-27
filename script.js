@@ -9,11 +9,11 @@ $(function () {
       : decodeURIComponent(results[1].replace(/\+/g, " "));
   }
 
-  let baseURL = getUrlParameter("baseURL");
-  baseURL = "https://jsonbox.io/" + baseURL + "/";
+  let baseURL = "https://json.extendsclass.com/bin/"
   let queueID = getUrlParameter("queueID");
   let calendarID = getUrlParameter("calendarID");
   let catalogID = getUrlParameter("catalogID");
+  let apiKey = getUrlParameter("apiKey");
 
   function loading() {
     document.querySelector("#loading").style.display = "block";
@@ -23,6 +23,23 @@ $(function () {
     document.querySelector("#loading").style.display = "none";
   }
 
+  async function read(id){
+    const response = await fetch(baseURL+id);
+    const data = await response.json();
+    return data;
+  }
+
+  async function write(id,newJson){
+    fetch(baseURL + id, {
+      headers: {
+        "Content-type": "application/json",
+      },
+      method: "PUT",
+      body: JSON.stringify( newJson ),
+    }).then(function (response) {
+    });
+  }
+
   /******************* QUEUE *******************/
 
   let queueArr = [""];
@@ -30,27 +47,35 @@ $(function () {
   let mealText = "";
   let source = "manual"; // source of calendar meal
 
+
+  /******************* NOTE TO SELF *******************/
+  // I refactored the showQueue() function to use read() and write(), but then other functions below worked just fine, so I didn't refactor those (yet).
+
   async function showQueue() {
     loading();
-    const jsonStore = await fetch(baseURL + queueID).then(function (response) {
+    // const data = await fetch(baseURL + queueID).then(function (response) {
+    //   loaded();
+    //   return response.json();
+    // });
+
+    read(queueID).then(data => {
       loaded();
-      return response.json();
-    });
-
-    if (jsonStore.queue != null) {
-      queueArr = jsonStore.queue;
-      let queueUl = document.querySelector("#queue ul");
-      for (let i = 1; i < jsonStore.queue.length; i++) {
-        let meal = jsonStore.queue[i];
-        queueUl.innerHTML +=
-          "<li><span>" +
-          meal +
-          "</span> <img src='calendar-icon.png' class='schedule'><img src='trash-icon.png' class='deleteQueueItem'></li>";
+      if (data.queue != null) {
+        queueArr = data.queue;
+        let queueUl = document.querySelector("#queue ul");
+        for (let i = 1; i < data.queue.length; i++) {
+          let meal = data.queue[i];
+          queueUl.innerHTML +=
+            "<li><span>" +
+            meal +
+            "</span> <img src='calendar-icon.png' class='schedule'><img src='trash-icon.png' class='deleteQueueItem'></li>";
+        }
       }
-    }
 
-    queuesListenForSchedule();
-    queuesListenForDelete();
+      queuesListenForSchedule();
+      queuesListenForDelete();
+      
+    });
   }
   showQueue();
 
