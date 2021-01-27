@@ -674,7 +674,7 @@ $(function () {
       loaded();
     });
   }
-  refreshCatalog();
+  // refreshCatalog();
 
   async function showCatalog() {
     loading();
