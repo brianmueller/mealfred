@@ -264,6 +264,13 @@ h1 .icon {
   padding: 2px;
 }
 
+#newRecipePhotoConvert {
+  color:white;
+  background-color:darkorange; 
+  border-radius:5px;
+  padding: 2px;
+}
+
 #addRecipe, #clearNewRecipe {
   margin: 20px 0 10px;
 }

@@ -554,13 +554,7 @@ $(function () {
 
   /******************* NEW RECIPE *******************/
 
-  document
-    .querySelector("#newRecipePhotoGenerate")
-    .addEventListener("click", function () {
-      let newRecipePhotoUrl = document.querySelector("#newRecipePhotoUrl").value;
-      getPhotoImg(newRecipePhotoUrl);
-    });
-
+  // generate/convert photos.app.goo/gl/ link to jpg (NOT WORKING)
   function getPhotoImg(url) {
     loading();
     $.ajax({
@@ -578,6 +572,22 @@ $(function () {
       },
     });
   }
+  document.querySelector("#newRecipePhotoGenerate").addEventListener("click", function () {
+    alert("This feature is currently not working.");
+    // let newRecipePhotoUrl = document.querySelector("#newRecipePhotoUrl").value;
+    // getPhotoImg(newRecipePhotoUrl);
+  });
+
+  // convert lh3.googleusercontent.com/ link to properly formatted jpg (WORKING)
+  function convertPhotoImg(url) {
+    return url.substring(0,url.indexOf("="))+"=h400-w400-c"
+  }
+  document.querySelector("#newRecipePhotoConvert").addEventListener("click", function () {
+    let newRecipePhotoUrl = document.querySelector("#newRecipePhotoImg").value;
+    document.querySelector("#newRecipePhotoImg").value = convertPhotoImg(newRecipePhotoUrl);
+  });
+  
+
 
   let newRecipeTitle = document.querySelector("#newRecipeTitle");
   let newRecipeNotes = document.querySelector("#newRecipeNotes");
@@ -627,6 +637,7 @@ $(function () {
       body: JSON.stringify({ catalog: catalogHash }),
     }).then(function (response) {
       loaded();
+      alert("Added");
     });
   }
 
