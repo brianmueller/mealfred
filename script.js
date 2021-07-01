@@ -42,8 +42,8 @@ $(function () {
 
   /******************* QUEUE *******************/
 
-  let queueArr = [""];
-  let mealIndex = 0;
+  let queueHash = {"queue":[]};
+  // let mealIndex = 0;
   let mealText = "";
   let source = "manual"; // source of calendar meal
 
@@ -61,14 +61,15 @@ $(function () {
     read(queueID).then(data => {
       loaded();
       if (data.queue != null) {
-        queueArr = data.queue;
+        queueHash = data.queue;
         let queueUl = document.querySelector("#queue ul");
-        for (let i = 1; i < data.queue.length; i++) {
-          let meal = data.queue[i];
+        for (let i = 0; i < data.queue.length; i++) {
+          let meal = data.queue[i].title;
+          let id = data.queue[i].id;
           queueUl.innerHTML +=
             "<li><span>" +
-            meal +
-            "</span> <img src='calendar-icon.png' class='schedule'><img src='trash-icon.png' class='deleteQueueItem'></li>";
+            meal.title +
+            "</span><span id=recipe"+id+"> <img src='calendar-icon.png' class='schedule'><img src='trash-icon.png' class='deleteQueueItem'></li>";
         }
       }
 
@@ -81,19 +82,19 @@ $(function () {
 
   // add to queue
 
-  function addToQueue(meal) {
+  function addToQueue(meal,id) {
     // front end
     let queueUl = document.querySelector("#queue ul");
     queueUl.innerHTML +=
       "<li><span>" +
       meal +
-      "</span> <img src='calendar-icon.png' class='schedule'><img src='trash-icon.png' class='deleteQueueItem'></li>";
+      "</span><span id=recipe"+id+"> <img src='calendar-icon.png' class='schedule'><img src='trash-icon.png' class='deleteQueueItem'></li>";
 
     queuesListenForSchedule();
     queuesListenForDelete();
 
     // back end
-    addToQueueJSON(meal);
+    addToQueueJSON(meal,id);
   }
 
   // user text
@@ -103,7 +104,7 @@ $(function () {
     } else if (userMeal == "") {
       alert("Meal cannot be blank");
     } else {
-      addToQueue(userMeal);
+      addToQueue(userMeal,null);
     }
   });
 
@@ -115,31 +116,33 @@ $(function () {
       element.addEventListener("click", function () {
         let catalogMeal = this.parentElement.childNodes[1].childNodes[1]
           .childNodes[1].firstChild.innerHTML;
-        addToQueue(catalogMeal);
+        let mealId = this.parentElement.childNodes[1].childNodes[3].id;
+        mealId = mealId.substring(6); // turn recipe4 into 4
+        addToQueue(catalogMeal,mealId);
         this.src = "plus-icon-blue.png";
       });
     });
   }
 
-  async function addToQueueJSON(meal) {
+  async function addToQueueJSON(meal,id) {
     loading();
     const jsonStore = await fetch(baseURL + queueID).then(function (response) {
       return response.json();
     });
 
-    queueArr = jsonStore.queue;
-    if (jsonStore.queue == null) {
-      queueArr = ["", meal];
-    } else {
-      queueArr.push(meal);
-    }
+    queueHash = jsonStore.queue;
+    // if (jsonStore.queue == null) {
+      // queueHash = ["", meal];
+    // } else {
+      queueHash.push({"title":meal,"id":id});
+    // }
     loading();
     fetch(baseURL + queueID, {
       headers: {
         "Content-type": "application/json",
       },
       method: "PUT",
-      body: JSON.stringify({ queue: queueArr }),
+      body: JSON.stringify({ queue: queueHash }),
     }).then(function (response) {
       loaded();
     });
@@ -167,16 +170,23 @@ $(function () {
         "Content-type": "application/json",
       },
       method: "PUT",
-      body: JSON.stringify({ queue: [""] }),
+      body: JSON.stringify({ queue: [] }),
     }).then(function (response) {
       loaded();
     });
   }
 
   // delete item from queue
-
+  // mealT = mealText
+  // mealI = mealIndex
   function deletefromQueue(mealT) {
-    mealI = queueArr.indexOf(mealT);
+    let mealI = 0;
+    for(let i = 0; i < queueHash.length; i++){
+      if(queueHash[i].title == mealT){
+        mealI = i;
+      }
+    }
+    // mealI = queueArr.indexOf(mealT);
     queueArr.splice(mealI, 1);
     loading();
     fetch(baseURL + queueID, {
@@ -184,7 +194,7 @@ $(function () {
         "Content-type": "application/json",
       },
       method: "PUT",
-      body: JSON.stringify({ queue: queueArr }),
+      body: JSON.stringify({ queue: queueHash }),
     }).then(function (response) {
       loaded();
     });
@@ -394,12 +404,23 @@ $(function () {
       });
     }
 
+    calendarMealsListenForJumps();
     calendarMealsListenForQueue();
     calendarMealsListenForReschedule();
     calendarMealsListenForDelete();
     calendarEventsListenForDelete();
   }
   showCalendar();
+
+  // click to jump to recipe
+  function calendarMealsListenForJumps(){
+    let allMeals = document.querySelectorAll("td.meals li");
+    console.log(allMeals);
+    allMeals.forEach(function(meal){
+      
+    });
+    
+  }
 
   // user meals
 
@@ -627,8 +648,9 @@ $(function () {
     });
 
     catalogHash = jsonStore.catalog;
+    recipe.id = catalogHash.length;
     catalogHash.push(recipe);
-    console.log(catalogHash);
+    // console.log(catalogHash);
     fetch(baseURL + catalogID, {
       headers: {
         "Content-type": "application/json",
@@ -698,7 +720,7 @@ $(function () {
 
     if (jsonStore.catalog != null) {
       catalogHash = jsonStore.catalog;
-      // console.log(catalogHash);
+      console.log(catalogHash.length);
       catalogHash.forEach(function (recipe, index) {
         let toAdd = "";
         toAdd += `
