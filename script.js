@@ -14,7 +14,7 @@ $(function () {
   let calendarID = getUrlParameter("calendarID");
   let catalogID = getUrlParameter("catalogID");
   let apiKey = getUrlParameter("apiKey");
-
+  
   function loading() {
     document.querySelector("#loading").style.display = "block";
   }
@@ -143,8 +143,8 @@ $(function () {
     catalogHash = jsonStore.catalog;
     let mealIndex = findRecipeIndex(catalogHash,title)
     let mealToEdit = catalogHash[mealIndex];
-    console.log("mealIndex: " + mealIndex);
-    console.log("mealToEdit: " + mealToEdit);
+    // console.log("mealIndex: " + mealIndex);
+    // console.log("mealToEdit: " + mealToEdit);
 
     newRecipeTitle.value = mealToEdit.title;
     newRecipeNotes.value = mealToEdit.notes;
@@ -383,8 +383,9 @@ $(function () {
 
   function scheduleMealFront(day, meal) {
     let targetDay = document.querySelector("#" + day.toLowerCase());
-    targetDay.childNodes[3].childNodes[1].innerHTML += `<li><span>${meal}</span> <br><img src="queue-icon.png" class="queueCalendarMeal"> <img src='calendar-icon.png' class='reschedule'> <img src='trash-icon.png' class='deleteCalendarMeal'></li>`;
+    targetDay.childNodes[3].childNodes[1].innerHTML += `<li><span>${meal}</span> <br><img src="queue-icon.png" class="queueCalendarMeal"> <img src='calendar-icon.png' class='reschedule'> <img src="down-icon.png" class="jumpToMeal"> <img src='trash-icon.png' class='deleteCalendarMeal'></li>`;
 
+    calendarMealsListenForJumps()
     calendarMealsListenForQueue();
     calendarMealsListenForReschedule();
     calendarMealsListenForDelete();
@@ -441,7 +442,7 @@ $(function () {
           let day = trDay.children[0].innerText;
           let meals = calendarHash[day]["meals"];
           for (let i = 1; i < meals.length; i++) {
-            trDay.childNodes[3].childNodes[1].innerHTML += `<li><span>${meals[i]}</span> <br><img src="queue-icon.png" class="queueCalendarMeal"> <img src='calendar-icon.png' class='reschedule'> <img src='trash-icon.png' class='deleteCalendarMeal'></li>`;
+            trDay.childNodes[3].childNodes[1].innerHTML += `<li><span>${meals[i]}</span> <br><img src="queue-icon.png" class="queueCalendarMeal"> <img src='calendar-icon.png' class='reschedule'> <img src="down-icon.png" class="jumpToMeal"> <img src='trash-icon.png' class='deleteCalendarMeal'></li>`;
           }
           let events = calendarHash[day]["events"];
           for (let i = 1; i < events.length; i++) {
@@ -451,12 +452,33 @@ $(function () {
       });
     }
 
+    calendarMealsListenForJumps();
     calendarMealsListenForQueue();
     calendarMealsListenForReschedule();
     calendarMealsListenForDelete();
     calendarEventsListenForDelete();
   }
   showCalendar();
+
+  // click to jump from calendar to recipe
+  function calendarMealsListenForJumps(){
+    let allJumps = document.querySelectorAll(".jumpToMeal");
+    allJumps.forEach(function(jump){
+      jump.addEventListener("click",function(){
+        console.log(catalogHash);
+        
+        mealText = jump.parentElement.childNodes[0].innerText;
+        console.log(mealText);
+        
+        mealIndex = findRecipeIndex(catalogHash,mealText);
+        console.log(mealIndex);
+
+        document.querySelector("#recipe"+mealIndex).scrollIntoView();
+        window.scrollBy(0, -40);
+      });
+    });
+
+  }
 
   // user meals
 
@@ -685,8 +707,8 @@ $(function () {
     
     catalogHash = jsonStore.catalog;
     let catalogMealIndex = findRecipeIndex(catalogHash,recipe.title);
-    console.log("catalogMealIndex: " + catalogMealIndex);
-    console.log("recipe.title: " + recipe.title);
+    // console.log("catalogMealIndex: " + catalogMealIndex);
+    // console.log("recipe.title: " + recipe.title);
     if(catalogMealIndex < 0){ // add
       catalogHash.push(recipe);
     } else { // edit
@@ -772,7 +794,7 @@ $(function () {
     });
 
     catalogHash = jsonStore.catalog;
-    console.log(catalogHash);
+    // console.log(catalogHash);
     fetch(baseURL + catalogID, {
       headers: {
         "Content-type": "application/json",

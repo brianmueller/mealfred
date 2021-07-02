@@ -126,7 +126,8 @@ ul {
 .deleteQueueItem,
 .deleteCalendarMeal,
 .deleteCalendarEvent,
-.queueCalendarMeal {
+.queueCalendarMeal,
+.jumpToMeal {
   height: 20px;
   position: relative;
   top: -3px;
