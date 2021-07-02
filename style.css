@@ -193,6 +193,13 @@ h1 .icon {
   height: 60px;
 }
 
+.catalogEdit {
+  position: absolute;
+  bottom: 20px;
+  left: 10px;
+  height: 60px;
+}
+
 .overlay {
   position: fixed;
   /*display: none; // causes problem with fittext */
@@ -271,7 +278,7 @@ h1 .icon {
   padding: 2px;
 }
 
-#addRecipe, #clearNewRecipe {
+#addRecipe, #clearRecipe, #deleteRecipe {
   margin: 20px 0 10px;
 }
 
@@ -284,7 +291,16 @@ h1 .icon {
   padding: 10px 20px;
 }
 
-#clearNewRecipe p{
+#clearRecipe p{
+  color:white;
+  background-color: orange;
+  border-radius:10px;
+  display: inline;
+  font-weight:700;
+  padding: 10px 20px;
+}
+
+#deleteRecipe p{
   color:white;
   background-color: red;
   border-radius:10px;

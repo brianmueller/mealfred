@@ -40,6 +40,16 @@ $(function () {
     });
   }
 
+  function findRecipeIndex(catalog,title){
+    let index = -1;
+    for(let i = 0; i < catalog.length; i++){
+      if(catalog[i].title == title){
+        return i;
+      }
+    }
+    return index;
+  }
+
   /******************* QUEUE *******************/
 
   let queueArr = [""];
@@ -120,6 +130,53 @@ $(function () {
       });
     });
   }
+
+  async function loadRecipeToEdit(title) {
+    loading();
+    const jsonStore = await fetch(baseURL + catalogID).then(function (
+      response
+    ) {
+      loaded();
+      return response.json();
+    });
+
+    catalogHash = jsonStore.catalog;
+    let mealIndex = findRecipeIndex(catalogHash,title)
+    let mealToEdit = catalogHash[mealIndex];
+    console.log("mealIndex: " + mealIndex);
+    console.log("mealToEdit: " + mealToEdit);
+
+    newRecipeTitle.value = mealToEdit.title;
+    newRecipeNotes.value = mealToEdit.notes;
+    newRecipeTags.value = mealToEdit.tags;
+    newRecipeLink.value = mealToEdit.link;
+    newRecipePhotoUrl.value = mealToEdit.photoUrl;
+    newRecipePhotoImg.value = mealToEdit.photoImg;
+    newRecipeId.value = mealIndex;
+    
+    // let newRecipeNotes = document.querySelector("#newRecipeNotes");
+    // let newRecipeTags = document.querySelector("#newRecipeTags");
+    // let newRecipeLink = document.querySelector("#newRecipeLink");
+    // let newRecipePhotoUrl = document.querySelector("#newRecipePhotoUrl");
+    // let newRecipePhotoImg = document.querySelector("#newRecipePhotoImg");
+    // let newRecipePhotoId = document.querySelector("#newRecipeId");
+    document.getElementById('newRecipe').scrollIntoView();
+  }
+  
+  // catalog edit
+  function catalogListenForEdit() {
+    let allCatalogEdit = document.getElementsByClassName("catalogEdit");
+
+    Array.from(allCatalogEdit).forEach(function (element) {
+      element.addEventListener("click", function () {
+        // let catalogMealId = this.parentElement.childNodes[1].childNodes[3].id;
+        // catalogMealId = parseInt(catalogMealId.substring(6)); // turn recipe4 into 4
+        let catalogMealTitle = this.parentElement.childNodes[1].childNodes[1].childNodes[1].childNodes[0].innerText;
+        loadRecipeToEdit(catalogMealTitle);
+      });
+    });
+  }
+  catalogListenForEdit();
 
   async function addToQueueJSON(meal) {
     loading();
@@ -232,8 +289,8 @@ $(function () {
 
         let rescheduleOldDay = this.parentElement.parentElement.parentElement
           .parentElement.childNodes[1].innerText;
-        console.log(rescheduleOldDay);
-        console.log(mealText);
+        // console.log(rescheduleOldDay);
+        // console.log(mealText);
         removeFromCalendar("meal", rescheduleOldDay, mealText);
 
         this.parentElement.remove();
@@ -595,6 +652,7 @@ $(function () {
   let newRecipeLink = document.querySelector("#newRecipeLink");
   let newRecipePhotoUrl = document.querySelector("#newRecipePhotoUrl");
   let newRecipePhotoImg = document.querySelector("#newRecipePhotoImg");
+  let newRecipeId = document.querySelector("#newRecipeId");
 
   document.querySelector("#addRecipe").addEventListener("click",function(){
     // newRecipeTitle = document.querySelector("#newRecipeTitle");
@@ -622,13 +680,19 @@ $(function () {
     const jsonStore = await fetch(baseURL + catalogID).then(function (
       response
     ) {
-      loaded();
       return response.json();
     });
-
+    
     catalogHash = jsonStore.catalog;
-    catalogHash.push(recipe);
-    console.log(catalogHash);
+    let catalogMealIndex = findRecipeIndex(catalogHash,recipe.title);
+    console.log("catalogMealIndex: " + catalogMealIndex);
+    console.log("recipe.title: " + recipe.title);
+    if(catalogMealIndex < 0){ // add
+      catalogHash.push(recipe);
+    } else { // edit
+      catalogHash[catalogMealIndex] = recipe;
+    }
+    
     fetch(baseURL + catalogID, {
       headers: {
         "Content-type": "application/json",
@@ -637,21 +701,55 @@ $(function () {
       body: JSON.stringify({ catalog: catalogHash }),
     }).then(function (response) {
       loaded();
-      alert("Added");
+      newRecipeId.value = catalogHash.length; // update DOM value (disabled to user)
+      alert("Done!");
     });
   }
 
-  document.querySelector("#clearNewRecipe").addEventListener("click",function(){
-    clearNewRecipe();
+  document.querySelector("#deleteRecipe").addEventListener("click",function(){
+    let id = newRecipeId.value;
+    deleteRecipe(id);
   });
 
-  function clearNewRecipe(){
+
+  async function deleteRecipe(id) {
+    loading();
+    const jsonStore = await fetch(baseURL + catalogID).then(function (
+      response
+    ) {
+      return response.json();
+    });
+
+    // front
+    document.querySelector("#recipe" + id).parentElement.parentElement.remove();
+
+    // back
+    catalogHash = jsonStore.catalog;
+    catalogHash.splice(id, 1);
+    fetch(baseURL + catalogID, {
+        headers: {
+            "Content-type": "application/json",
+        },
+        method: "PUT",
+        body: JSON.stringify({ catalog: catalogHash }),
+    }).then(function (response) {
+      clearRecipe();
+      loaded();
+    });
+  }
+
+  document.querySelector("#clearRecipe").addEventListener("click",function(){
+    clearRecipe();
+  });
+
+  function clearRecipe(){
     newRecipeTitle.value = "";
     newRecipeNotes.value = "";
     newRecipeTags.value = "";
     newRecipeLink.value = "";
     newRecipePhotoUrl.value = "";
     newRecipePhotoImg.value = "";
+    newRecipeId.value = "";
   }
 
   // getPhotoSrc("https://photos.app.goo.gl/HAa5bsUX8HfjNBd18");
@@ -718,6 +816,7 @@ $(function () {
                               <img src=${recipe.photoImg} class="card-img-top recipeImg" id="recipe${index}">
                           </div>
                           <img src="plus-icon.png" class="catalogPlus">
+                          <img src="edit-icon.png" class="catalogEdit">
                         </div>`;
         toAdd += `
                           <div id="recipe${index}notes" class="overlay">
@@ -755,6 +854,7 @@ $(function () {
       });
 
       catalogListenForPlus();
+      catalogListenForEdit();
     }
   }
   showCatalog();
