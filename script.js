@@ -822,7 +822,7 @@ $(function () {
       catalogHash.forEach(function (recipe, index) {
         let toAdd = "";
         toAdd += `
-                      <div class="col-6 col-md-3">
+                      <div class="col-6 col-md-3 recipe" data-tags="${recipe.tags.toLowerCase()}">
                           <div class="card">
                               <div class="card-body">
                                   <p class="card-title"><span>${recipe.title}</span>
@@ -877,11 +877,120 @@ $(function () {
 
       catalogListenForPlus();
       catalogListenForEdit();
+      createFilter();
     }
   }
   showCatalog();
 
   /******************* END CATALOG *******************/
+
+
+  /******************* BEGIN TAG FILTER *******************/
+
+  function getAllTags(){
+    let allRecipes = document.querySelectorAll('.recipe');
+    let allTags = [];
+    for(let i = 0; i < allRecipes.length; i++){
+      allRecipes[i].dataset.tags.split(",").forEach(function(tag){
+        allTags.push(tag);
+      });
+    }
+    let uniqTags = [...new Set(allTags)];
+    return uniqTags.sort();
+  }
+
+  function getAllSelectedTags(){
+    let allSelectedTags = [];
+    let allSelectedTagsDom = document.querySelectorAll('.tagSelected');
+    allSelectedTagsDom.forEach(function(tagDom){
+      allSelectedTags.push(tagDom.innerHTML);
+    });
+    return allSelectedTags;
+  }
+
+  function showRecipe(recipeDom){
+    recipeDom.style.display = 'block';
+  }
+
+  function hideRecipe(recipeDom){
+    recipeDom.style.display = 'none';
+  }
+
+  function runFilter(){
+    let allSelectedTags = getAllSelectedTags();
+    
+    let allRecipes = document.querySelectorAll('.recipe');
+    // loop through all recipes
+    allRecipes.forEach(function(recipe){
+      // if recipe tags includes all selected tags, show; else hide
+      // i.e. loop through all tags, if recipe does not include tag, hide and break; default show
+      
+      // `forEach` doesn't allow for `break`
+      // allSelectedTags.forEach(function(tag){
+      //   if(!recipe.dataset.tags.split(",").includes(tag)){
+      //     hideRecipe(recipe);
+      //     break; // doesn't work
+      //   }
+      //   showRecipe(recipe);
+      // });
+
+      // refactored using `for` loop
+      for(let i = 0; i < allSelectedTags.length; i++){
+        if(!recipe.dataset.tags.split(",").includes(allSelectedTags[i])){
+          hideRecipe(recipe);
+          break;
+        }
+        showRecipe(recipe);
+      }
+
+    });
+    
+  }
+  
+  function createFilter(){
+    let allTags = getAllTags();
+    let tagsDom = document.querySelector('#tags');
+
+    // show tags 
+    allTags.forEach(function(tag){
+      // <button type="button" class="btn btn-outline-dark">Dark</button>
+      let newTag = document.createElement('button');
+      newTag.setAttribute('type','button');
+      newTag.classList.add('btn','btn-outline-dark');
+      newTag.innerHTML = tag;
+      newTag.addEventListener('click',function(){
+        newTag.classList.toggle('btn-outline-dark');
+        newTag.classList.toggle('btn-primary');
+        newTag.classList.toggle('tagSelected');
+        runFilter();
+      });
+      tagsDom.appendChild(newTag);
+    });
+
+  }
+
+
+
+  // function getAllTags(allimages){
+  //   let allTags = [];
+  //   for(let i = 0; i < allimages.length; i++){
+  //     allimages[i].dataset.class.split(" ").forEach(function(tag){
+  // //       console.log(tag);
+  //       allTags.push(tag);
+  //     })
+  //   }
+  // //   console.log(allTags);
+  //   uniqTags = [...new Set(allTags)];
+  // //   console.log(uniqTags);
+  //   return uniqTags;
+  // }
+  // getAllTags(allimages);
+
+
+
+
+  /******************* END TAG FILTER *******************/
+
 
   // prevent double-tap zoom
   var lastTouchEnd = 0;

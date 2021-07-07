@@ -248,15 +248,15 @@ h1 .icon {
   width: 40px;
 }
 
-#newRecipe {
+#newRecipe, #filter {
   margin-bottom: 10px;
 }
 
-#newRecipe .row {
+#newRecipe .row, #filter .row {
   padding: 10px;
 }
 
-#newRecipe > div {
+#newRecipe > div, #filter > div {
   padding: 5px;
 }
 
@@ -308,4 +308,8 @@ h1 .icon {
   display: inline;
   font-weight:700;
   padding: 10px 20px;
+}
+
+#filter button {
+  margin: 5px;
 }
