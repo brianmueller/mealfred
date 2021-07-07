@@ -916,34 +916,56 @@ $(function () {
     recipeDom.style.display = 'none';
   }
 
+  function resetFilter(){
+    console.log("resetFilter() running")
+    // reset tags
+    let allSelectedTagsDom = document.querySelectorAll('.tagSelected');
+    allSelectedTagsDom.forEach(function(tagDom){
+      tagDom.classList.toggle('btn-outline-dark');
+      tagDom.classList.toggle('btn-primary');
+      tagDom.classList.remove('tagSelected');
+    });
+    // show all recipes
+    let allRecipes = document.querySelectorAll('.recipe');
+    allRecipes.forEach(function(recipe){
+      showRecipe(recipe);
+    });
+  }
+
   function runFilter(){
     let allSelectedTags = getAllSelectedTags();
     
     let allRecipes = document.querySelectorAll('.recipe');
-    // loop through all recipes
-    allRecipes.forEach(function(recipe){
-      // if recipe tags includes all selected tags, show; else hide
-      // i.e. loop through all tags, if recipe does not include tag, hide and break; default show
+
+    if(allSelectedTags.length == 0){ // no tags
+      resetFilter();
+    } else { // 1+ tags
       
-      // `forEach` doesn't allow for `break`
-      // allSelectedTags.forEach(function(tag){
-      //   if(!recipe.dataset.tags.split(",").includes(tag)){
-      //     hideRecipe(recipe);
-      //     break; // doesn't work
-      //   }
-      //   showRecipe(recipe);
-      // });
 
-      // refactored using `for` loop
-      for(let i = 0; i < allSelectedTags.length; i++){
-        if(!recipe.dataset.tags.split(",").includes(allSelectedTags[i])){
-          hideRecipe(recipe);
-          break;
+      // loop through all recipes
+      allRecipes.forEach(function(recipe){
+        // if recipe tags includes all selected tags, show; else hide
+        // i.e. loop through all tags, if recipe does not include tag, hide and break; default show
+        
+        // `forEach` doesn't allow for `break`
+        // allSelectedTags.forEach(function(tag){
+        //   if(!recipe.dataset.tags.split(",").includes(tag)){
+        //     hideRecipe(recipe);
+        //     break; // doesn't work
+        //   }
+        //   showRecipe(recipe);
+        // });
+
+        // refactored using `for` loop
+        for(let i = 0; i < allSelectedTags.length; i++){
+          if(!recipe.dataset.tags.split(",").includes(allSelectedTags[i])){
+            hideRecipe(recipe);
+            break;
+          }
+          showRecipe(recipe);
         }
-        showRecipe(recipe);
-      }
-
-    });
+      });
+    } // end else
     
   }
   
@@ -966,6 +988,17 @@ $(function () {
       });
       tagsDom.appendChild(newTag);
     });
+
+    tagsDom.appendChild(document.createElement('br'))
+
+    let resetFilterButton = document.createElement('button');
+    resetFilterButton.setAttribute('type','button');
+    resetFilterButton.classList.add('btn','btn-danger');
+    resetFilterButton.innerHTML = "reset";
+    resetFilterButton.addEventListener('click',function(){
+      resetFilter();
+    });
+    tagsDom.appendChild(resetFilterButton);
 
   }
 
