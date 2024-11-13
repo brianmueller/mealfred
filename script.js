@@ -1097,7 +1097,7 @@ $(function () {
       // alert("Chef: " + chef);
       resetChefColors();
       scheduleChefBack(day, chef)
-    }, 2000);
+    }, 1000);
   }
 
   // Function to reset all .chef elements to black
