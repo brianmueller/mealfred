@@ -315,3 +315,10 @@ h1 .icon {
 #filter button {
   margin: 5px;
 }
+
+.chef {
+  display: block; /* Places the text on a new line */
+  font-size: 0.5em; /* Adjust font size as needed */
+  color: #000; /* Adjust color as desired */
+  margin-top: 4px; /* Adds space between "day" and the small text */
+}

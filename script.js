@@ -448,6 +448,8 @@ $(function () {
           for (let i = 1; i < events.length; i++) {
             trDay.childNodes[5].childNodes[1].innerHTML += `<li><span>${events[i]}</span> <br><img src='trash-icon.png' class='deleteCalendarEvent'></li>`;
           }
+          // TODO
+          trDay.querySelector('.chef').textContent = calendarHash[day]["chef"];
         }
       });
     }
@@ -591,30 +593,37 @@ $(function () {
       Saturday: {
         meals: [""],
         events: [""],
+        chef: "",
       },
       Sunday: {
         meals: [""],
         events: [""],
+        chef: "",
       },
       Monday: {
         meals: [""],
         events: [""],
+        chef: "",
       },
       Tuesday: {
         meals: [""],
         events: [""],
+        chef: "",
       },
       Wednesday: {
         meals: [""],
         events: [""],
+        chef: "",
       },
       Thursday: {
         meals: [""],
         events: [""],
+        chef: "",
       },
       Friday: {
         meals: [""],
         events: [""],
+        chef: "",
       },
     };
     loading();
@@ -1059,17 +1068,22 @@ $(function () {
   // Define the array of chef names, starting with a blank option
   const chefNames = ["", "Brian", "Emily", "B & E"];
   let clickTimeout;
-
+  
   // Function to cycle the chef name
   function cycleChefName(event) {
     // Find the .chef span within the clicked row
-    const chefElement = event.target.querySelector(".chef");
+    const chefElement = event.currentTarget.querySelector(".chef");
+    const day = event.currentTarget.querySelector('.day').textContent.trim();
+    
+    if (!chefElement) return; // Exit if there's no .chef element found
     
     // Get the current index of the name in the chefNames array
     let currentIndex = chefNames.indexOf(chefElement.textContent);
     
     // Move to the next name, cycling back to the start if at the end
-    chefElement.textContent = chefNames[(currentIndex + 1) % chefNames.length];
+    let chef = chefNames[(currentIndex + 1) % chefNames.length];
+    chefElement.textContent = chef;
+    
     
     // Set the chef name color to gray
     chefElement.style.color = "lightgray";
@@ -1077,18 +1091,13 @@ $(function () {
     // Clear any previous timeout
     clearTimeout(clickTimeout);
 
-    // Start a new 2-second delay to change background color and reset chef name color
+    // Start a new 2-second delay to reset chef name color and show day name
     clickTimeout = setTimeout(() => {
-      // changeBackgroundColor();
-      alert("saved?")
+      // alert("Day: " + day);
+      // alert("Chef: " + chef);
       resetChefColors();
+      scheduleChefBack(day, chef)
     }, 2000);
-  }
-
-  // Function to change the background color to a random color
-  function changeBackgroundColor() {
-    const randomColor = `hsl(${Math.floor(Math.random() * 360)}, 100%, 80%)`;
-    document.body.style.backgroundColor = randomColor;
   }
 
   // Function to reset all .chef elements to black
@@ -1100,8 +1109,35 @@ $(function () {
 
   // Attach the cycleChefName function to each row's <th> element
   document.querySelectorAll('#calendar tbody tr').forEach(dayElement => {
-    dayElement.addEventListener('click', cycleChefName);
+    dayElement.addEventListener('click', cycleChefName);    
   });
+
+
+
+  /** FRONT END ABOVE / BACK END BELOW **/
+
+  async function scheduleChefBack(day, chefName) {
+    loading();
+    // const jsonStore = await fetch(baseURL+'calendar/'+day+'/events')
+    const jsonStore = await fetch(baseURL + calendarID).then(function (
+      response
+    ) {
+      return response.json();
+    });
+
+    calendarHash = jsonStore.calendar;
+    calendarHash[day].chef = chefName;
+
+    fetch(baseURL + calendarID, {
+      headers: {
+        "Content-type": "application/json",
+      },
+      method: "PUT",
+      body: JSON.stringify({ calendar: calendarHash }),
+    }).then(function (response) {
+      loaded();
+    });
+  }
 
 
 
