@@ -1053,4 +1053,58 @@ $(function () {
   }
   $(window).scroll(sticktothebottom);
   sticktothebottom();
+
+  /******************* BEGIN CHEF SELECTION *******************/
+
+  // Define the array of chef names, starting with a blank option
+  const chefNames = ["", "Brian", "Emily", "B & E"];
+  let clickTimeout;
+
+  // Function to cycle the chef name
+  function cycleChefName(event) {
+    // Find the .chef span within the clicked row
+    const chefElement = event.target.querySelector(".chef");
+    
+    // Get the current index of the name in the chefNames array
+    let currentIndex = chefNames.indexOf(chefElement.textContent);
+    
+    // Move to the next name, cycling back to the start if at the end
+    chefElement.textContent = chefNames[(currentIndex + 1) % chefNames.length];
+    
+    // Set the chef name color to gray
+    chefElement.style.color = "lightgray";
+    
+    // Clear any previous timeout
+    clearTimeout(clickTimeout);
+
+    // Start a new 2-second delay to change background color and reset chef name color
+    clickTimeout = setTimeout(() => {
+      // changeBackgroundColor();
+      alert("saved?")
+      resetChefColors();
+    }, 2000);
+  }
+
+  // Function to change the background color to a random color
+  function changeBackgroundColor() {
+    const randomColor = `hsl(${Math.floor(Math.random() * 360)}, 100%, 80%)`;
+    document.body.style.backgroundColor = randomColor;
+  }
+
+  // Function to reset all .chef elements to black
+  function resetChefColors() {
+    document.querySelectorAll('.chef').forEach(chefElement => {
+      chefElement.style.color = "black";
+    });
+  }
+
+  // Attach the cycleChefName function to each row's <th> element
+  document.querySelectorAll('#calendar tbody tr').forEach(dayElement => {
+    dayElement.addEventListener('click', cycleChefName);
+  });
+
+
+
+  /******************* END CHEF SELECTION *******************/
+
 }); //ready
