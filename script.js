@@ -1108,7 +1108,7 @@ $(function () {
   }
 
   // Attach the cycleChefName function to each row's <th> element
-  document.querySelectorAll('#calendar tbody tr').forEach(dayElement => {
+  document.querySelectorAll('#calendar tbody tr th').forEach(dayElement => {
     dayElement.addEventListener('click', cycleChefName);    
   });
 
