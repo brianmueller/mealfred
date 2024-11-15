@@ -436,10 +436,12 @@ $(function () {
     if (jsonStore.calendar != null) {
       calendarHash = jsonStore.calendar;
       let calendarBody = document.querySelector("#calendar tbody");
+      console.log(calendarHash)
 
       calendarBody.childNodes.forEach(function (trDay) {
+        console.log(trDay)
         if (trDay.nodeName == "TR") {
-          let day = trDay.children[0].innerText;
+          let day = trDay.children[0].innerText.trim();
           let meals = calendarHash[day]["meals"];
           for (let i = 1; i < meals.length; i++) {
             trDay.childNodes[3].childNodes[1].innerHTML += `<li><span>${meals[i]}</span> <br><img src="queue-icon.png" class="queueCalendarMeal"> <img src='calendar-icon.png' class='reschedule'> <img src="down-icon.png" class="jumpToMeal"> <img src='trash-icon.png' class='deleteCalendarMeal'></li>`;
@@ -448,7 +450,6 @@ $(function () {
           for (let i = 1; i < events.length; i++) {
             trDay.childNodes[5].childNodes[1].innerHTML += `<li><span>${events[i]}</span> <br><img src='trash-icon.png' class='deleteCalendarEvent'></li>`;
           }
-          // TODO
           trDay.querySelector('.chef').textContent = calendarHash[day]["chef"];
         }
       });
