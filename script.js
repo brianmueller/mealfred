@@ -490,7 +490,7 @@ $(function () {
 
     Array.from(allMealsPlus).forEach(function (element) {
       element.addEventListener("click", function () {
-        let userDay = this.parentElement.parentElement.childNodes[1].innerText;
+        let userDay = this.parentElement.parentElement.querySelector('.day').innerText;
         let userMeal = prompt("Please enter the meal:");
         if (userMeal == null) {
         } else if (userMeal == "") {
@@ -511,7 +511,7 @@ $(function () {
 
     Array.from(allEventsPlus).forEach(function (element) {
       element.addEventListener("click", function () {
-        let userDay = this.parentElement.parentElement.childNodes[1].innerText;
+        let userDay = this.parentElement.parentElement.querySelector('.day').innerText;
         let userEvent = prompt("Please enter the event:");
         if (userEvent == null) {
         } else if (userEvent == "") {
