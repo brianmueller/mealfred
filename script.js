@@ -268,9 +268,9 @@ $(function () {
       element.addEventListener("click", function () {
         let meal = this.parentElement.childNodes[0].innerText;
         let type = "meal";
-        let day = this.parentElement.parentElement.parentElement.parentElement
-          .childNodes[1].innerText;
+        let day = this.parentElement.parentElement.parentElement.parentElement.querySelector('.day').innerText;
         addToQueue(meal);
+        // console.log({type, day, meal})
         removeFromCalendar(type, day, meal);
         this.parentElement.remove();
       });
@@ -288,7 +288,7 @@ $(function () {
         $("#scheduler").css("display", "block");
 
         let rescheduleOldDay = this.parentElement.parentElement.parentElement
-          .parentElement.childNodes[1].innerText;
+          .parentElement.querySelector('.day').innerText;
         // console.log(rescheduleOldDay);
         // console.log(mealText);
         removeFromCalendar("meal", rescheduleOldDay, mealText);
@@ -304,7 +304,7 @@ $(function () {
       element.addEventListener("click", function () {
         // back end
         let mealDay = this.parentElement.parentElement.parentElement
-          .parentElement.childNodes[1].innerText;
+          .parentElement.querySelector('.day').innerText;
         let mealText = this.parentElement.childNodes[0].innerText;
         removeFromCalendar("meal", mealDay, mealText);
 
@@ -320,7 +320,7 @@ $(function () {
       element.addEventListener("click", function () {
         // back end
         let eventDay = this.parentElement.parentElement.parentElement
-          .parentElement.childNodes[1].innerText;
+          .parentElement.querySelector('.day').innerText;
         let eventText = this.parentElement.childNodes[0].innerText;
         removeFromCalendar("event", eventDay, eventText);
 
