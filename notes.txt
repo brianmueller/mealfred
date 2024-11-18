@@ -1,0 +1,19 @@
+let baseURL = "https://json.extendsclass.com/bin/"
+let queueID = "ef284303e4e9";
+let calendarID = "0dd7d122ccf4";
+let catalogID = "6101bafd48bf";
+
+QUEUE URL
+https://json.extendsclass.com/bin/ef284303e4e9
+
+CALENDAR URL
+https://json.extendsclass.com/bin/0dd7d122ccf4
+
+CATALOG URL
+https://json.extendsclass.com/bin/6101bafd48bf
+
+BACKUP CATALOG
+use db-backup.sh
+
+PREVIEW LOCALLY
+file:///Users/brian/Dropbox/code/mealfred/index.html?queueID=ef284303e4e9&calendarID=0dd7d122ccf4&catalogID=6101bafd48bf&apiKey=e134e98c-5f4d-11eb-b69b-0242ac110002
