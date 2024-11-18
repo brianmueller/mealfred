@@ -439,7 +439,7 @@ $(function () {
       console.log(calendarHash)
 
       calendarBody.childNodes.forEach(function (trDay) {
-        console.log(trDay)
+        // console.log(trDay)
         if (trDay.nodeName == "TR") {
           let day = trDay.children[0].innerText.trim();
           let meals = calendarHash[day]["meals"];

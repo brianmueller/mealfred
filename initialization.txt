@@ -1,5 +1,19 @@
 INITIALIZATION
 
+https://extendsclass.com/json-storage.html
+
+Create new bin with test JSON:
+{"name": "my JSON"}
+
+Retrieve API key
+
+******************* JSONBOX *******************
+
+
+
+
+
+
 get new sandbox, set baseURL, i.e. box_01ab51182a68189839b6
 
 ****QUEUE****
