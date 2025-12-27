@@ -669,7 +669,10 @@ $(function () {
 
   // convert lh3.googleusercontent.com/ link to properly formatted jpg (WORKING)
   function convertPhotoImg(url) {
-    return url.substring(0,url.indexOf("="))+"=h400-w400-c"
+    // return url.substring(0,url.indexOf("="))+"=h400-w400-c"
+    const match = url.match(/\/pw\/([^=]+)/);
+    if (!match) return url;
+    return `https://lh3.googleusercontent.com/pw/${match[1]}=h400-w400-c`;
   }
   document.querySelector("#newRecipePhotoConvert").addEventListener("click", function () {
     let newRecipePhotoUrl = document.querySelector("#newRecipePhotoImg").value;
