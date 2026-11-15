@@ -9,11 +9,13 @@ $(function () {
       : decodeURIComponent(results[1].replace(/\+/g, " "));
   }
 
-  let baseURL = "https://json.extendsclass.com/bin/"
+  // let baseURL = "https://json.extendsclass.com/bin/"
+  let baseURL = "https://api.npoint.io/" // migrated 11/15/26
   let queueID = getUrlParameter("queueID");
   let calendarID = getUrlParameter("calendarID");
   let catalogID = getUrlParameter("catalogID");
-  let apiKey = getUrlParameter("apiKey");
+  // let apiKey = getUrlParameter("apiKey");
+
   
   function loading() {
     document.querySelector("#loading").style.display = "block";
@@ -29,6 +31,24 @@ $(function () {
     return data;
   }
 
+  /* replaced ABOVE with BELOW after API endpoint was returning JSON+HTML (new code cuts off HTML) */
+  // async function fetchJSON(url, options) {
+  //   const response = await fetch(url, options);
+  //   const text = await response.text();
+
+  //   const start = text.indexOf('{');
+  //   for (let i = text.indexOf('}', start); i !== -1; i = text.indexOf('}', i + 1)) {
+  //     try {
+  //       return JSON.parse(text.slice(start, i + 1));
+  //     } catch (e) { /* keep going */ }
+  //   }
+  //   throw new Error('No JSON in response (status ' + response.status + ')');
+  // }
+
+  // async function read(id) {
+  //   return fetchJSON(baseURL + id);
+  // }
+  
   async function write(id,newJson){
     fetch(baseURL + id, {
       headers: {
